@@ -1,9 +1,12 @@
-# react-lib
+# impression-tracker-react-hook
 
-Project template for a React library with TypeScript support
+This library is used to track impressions using a react useImpressionTracker hook.
 
 ## Features
 
+
+
+Uses
 - [TypeScript](https://www.typescriptlang.org/) support
 - [React](https://reactjs.org/) support
 - CSS Modules with [PostCSS](https://postcss.org/)
@@ -14,12 +17,16 @@ Project template for a React library with TypeScript support
 - Flexible builds with [Rollup](https://www.rollupjs.org/)
 - [CHANGELOG.md](https://keepachangelog.com/en/1.0.0/) template
 
-## Getting started
+## Scripts
 
-- Clone the project or click "Use this template" button on GitHub
-- Update the `package.json` with your project details
-- Update `README.md` and `CHANGELOG.md`
+- Run most commands: `npm run finish`
 - Build the project: `npm run build`
   - Validate output bundle size with `npm run size`
-- Lint the project: `npm lint` or `npm run lint`
+- Lint the project: `npm run lint`
 - Run unit tests: `npm test` or `npm test`
+
+# Resources
+
+The base of this repository is a combination of the following repos:
+- https://github.com/DenysVuika/react-lib
+- https://github.com/Alexandrshy/como-north and https://dev.to/alexandrshy/creating-a-template-repository-in-github-1d05
