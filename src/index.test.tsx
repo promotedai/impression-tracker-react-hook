@@ -7,6 +7,7 @@ interface Props {
   text: string;
 }
 
+// A simple component for testing useImpressionTracker.
 export const ExampleComponent = ({ text }: Props) => {
   const [ref, impressionId, logImpression] = useImpressionTracker({
     insertionId: 'abc',
@@ -15,11 +16,9 @@ export const ExampleComponent = ({ text }: Props) => {
       throw err;
     },
   });
-
   if (impressionId === null) {
     throw Error('impressionId should not be null');
   }
-
   if (logImpression === null) {
     throw Error('logImpression should not be null');
   }
@@ -31,4 +30,6 @@ describe('useImpressionTracker', () => {
     const { getByText } = render(<ExampleComponent text="component works" />);
     expect(getByText('component works')).toBeInTheDocument();
   });
+
+  // TODO - add tests for interactions.
 });
