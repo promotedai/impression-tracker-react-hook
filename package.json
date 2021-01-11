@@ -4,7 +4,6 @@
   "description": "Project template for a React library",
   "main": "impression-tracker-react-hook.umd.js",
   "module": "impression-tracker-react-hook.esm.js",
-  "private": "true",
   "typings": "index.d.ts",
   "scripts": {
     "prettier": "prettier '**/*.{js,ts}' --ignore-path ./.prettierignore",
