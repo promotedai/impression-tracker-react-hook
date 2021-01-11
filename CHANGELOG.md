@@ -1,3 +1,10 @@
+## [1.0.9](https://github.com/promotedai/impression-tracker-react-hook/compare/v1.0.8...v1.0.9) (2021-01-11)
+
+
+### Bug Fixes
+
+* try changing package name ([edb82f2](https://github.com/promotedai/impression-tracker-react-hook/commit/edb82f2127b694680c664c3f083ad3b83a8f1b69))
+
 ## [1.0.8](https://github.com/promotedai/impression-tracker-react-hook/compare/v1.0.7...v1.0.8) (2021-01-11)
 
 
