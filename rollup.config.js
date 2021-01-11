@@ -10,6 +10,8 @@ import { resolve } from 'path';
 
 const peerDependencies = pkg.config.lib.peerDependencies;
 
+const extensions = ['.js', '.jsx', '.ts', '.tsx'];
+
 export default [
   {
     input: 'src/index.tsx',
