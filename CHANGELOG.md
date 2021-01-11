@@ -1,3 +1,10 @@
+## [1.0.17](https://github.com/promotedai/impression-tracker-react-hook/compare/v1.0.16...v1.0.17) (2021-01-11)
+
+
+### Bug Fixes
+
+* the push by removing the registry ([e467939](https://github.com/promotedai/impression-tracker-react-hook/commit/e4679394413817e1501be07546a5654beef4bbda))
+
 ## [1.0.16](https://github.com/promotedai/impression-tracker-react-hook/compare/v1.0.15...v1.0.16) (2021-01-11)
 
 
