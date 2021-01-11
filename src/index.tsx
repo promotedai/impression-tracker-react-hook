@@ -21,6 +21,7 @@ interface TrackerProps {
 Calls `logImpression` if a insertion `ref` is viewed log enough to be considered
 an impression.
 
+
 This is important because we want more signals into content interaction.
 
 This hook returns [ref, impressionId, logImpression].  The ref needs to be
