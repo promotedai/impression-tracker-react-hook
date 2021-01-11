@@ -12,13 +12,16 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+          persist-credentials: false
 
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v2
         with:
           always-auth: true
           node-version: 12
-          registry-url: "https://npm.pkg.github.com/promotedai"
+          registry-url: "https://npm.pkg.github.com"
           scope: "@promotedai"
 
       - name: Install dependencies
