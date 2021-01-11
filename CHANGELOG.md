@@ -1,3 +1,10 @@
+## [1.0.15](https://github.com/promotedai/impression-tracker-react-hook/compare/v1.0.14...v1.0.15) (2021-01-11)
+
+
+### Bug Fixes
+
+* attempt to fix scope ([a6f7188](https://github.com/promotedai/impression-tracker-react-hook/commit/a6f718895dd437646412518a21059c92aed49976))
+
 ## [1.0.14](https://github.com/promotedai/impression-tracker-react-hook/compare/v1.0.13...v1.0.14) (2021-01-11)
 
 
