@@ -21,7 +21,7 @@ jobs:
         with:
           always-auth: true
           node-version: 12
-          registry-url: "https://npm.pkg.github.com"
+          registry-url: "https://registry.npmjs.org"
           scope: "@promotedai"
 
       - name: Install dependencies
