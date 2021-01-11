@@ -22,8 +22,7 @@
     "url": "https://github.com/promotedai/impression-tracker-react-hook"
   },
   "publishConfig": {
-    "access": "public",
-    "registry": "https://npm.pkg.github.com"
+    "access": "public"
   },
   "keywords": [
     "react",
