@@ -1,5 +1,5 @@
 {
-  "name": "@promotedai/impression-tracker-react-hook",
+  "name": "impression-tracker-react-hook",
   "version": "1.0.0",
   "description": "Project template for a React library",
   "main": "impression-tracker-react-hook.umd.js",
@@ -23,7 +23,7 @@
   },
   "publishConfig": {
     "access": "public",
-    "registry":"https://registry.npmjs.org"
+    "registry": "https://npm.pkg.github.com"
   },
   "keywords": [
     "react",
