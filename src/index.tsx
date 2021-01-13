@@ -2,7 +2,7 @@ import { Subtract } from 'utility-types';
 import React, { useEffect, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import 'intersection-observer';
-import { useInView } from 'react-intersection-observer';
+import { IntersectionOptions, useInView } from 'react-intersection-observer';
 // TODO - switch to dynamic import approach.
 
 // TODO - support polyfill.
@@ -21,7 +21,7 @@ interface TrackerProps {
   /* Called when an error occurs. */
   handleLogError: (err: Error) => void;
   /* To override the visibility threshold. */
-  visibleRatioThreshold?: number;
+  intersectionOptions?: IntersectionOptions;
   /* To override the visibility threshold. */
   visibilityTimeThreshold?: number;
 }
@@ -48,14 +48,14 @@ export const useImpressionTracker = (props: TrackerProps): TrackerResponse => {
     insertionId,
     logImpression,
     handleLogError,
-    visibleRatioThreshold = DEFAULT_VISIBILITY_RATIO_THRESHOLD,
+    intersectionOptions = {
+      threshold: DEFAULT_VISIBILITY_RATIO_THRESHOLD,
+    },
     visibilityTimeThreshold = DEFAULT_VISIBILITY_TIME_THRESHOLD,
   } = props;
   if (typeof window !== 'undefined' && typeof window.IntersectionObserver !== 'undefined') {
     try {
-      const [ref, inView] = useInView({
-        threshold: visibleRatioThreshold,
-      });
+      const [ref, inView] = useInView(intersectionOptions);
       const [prevInsertionId, setInsertionId] = useState('');
       const [impressionId, setImpressionId] = useState('');
       const [logged, setLogged] = useState(false);
