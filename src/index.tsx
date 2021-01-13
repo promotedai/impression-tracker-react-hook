@@ -53,7 +53,7 @@ type TrackerResponse = [(node?: Element | null) => void, string, () => void];
  *
  * @param props arguments
  * @return [ref, impressionId, logImpressionFunctor] - functor is a no arg
-           function that can be used for convenience.
+ *         function that can be used for convenience.
  */
 export const useImpressionTracker = (args: TrackerArguments): TrackerResponse => {
   const {
@@ -139,6 +139,7 @@ export interface WithImpressionTrackerProps {
 
 /**
  * An HOC version of useImpressionProps.  If you can, use the hook instead.
+ *
  * @param Component          the Component to wrap
  * @param getInsertionId     gets the insertionId from the props
  * @param innerLogImpression your logging code
