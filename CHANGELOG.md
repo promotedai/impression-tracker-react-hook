@@ -1,3 +1,10 @@
+## [3.0.1](https://github.com/promotedai/impression-tracker-react-hook/compare/v3.0.0...v3.0.1) (2021-01-13)
+
+
+### Bug Fixes
+
+* how changing insertion id works ([692ad28](https://github.com/promotedai/impression-tracker-react-hook/commit/692ad28d6723e5c8040dd6fac73ee47e145ef555))
+
 # [3.0.0](https://github.com/promotedai/impression-tracker-react-hook/compare/v2.0.0...v3.0.0) (2021-01-13)
 
 
