@@ -13,11 +13,20 @@ import { IntersectionOptions, useInView } from 'react-intersection-observer';
 const DEFAULT_VISIBILITY_RATIO_THRESHOLD = 0.5;
 const DEFAULT_VISIBILITY_TIME_THRESHOLD = 1000;
 
+export interface CommonImpression {
+  insertionId: string;
+  impressionId: string;
+}
+
+export interface Impression {
+  common: CommonImpression;
+}
+
 interface TrackerProps {
   /* The (pre-impression) insertionId to log on the impressionId. */
   insertionId: string;
   /* Called when we should log an impression. */
-  logImpression: (impressionId: string) => void;
+  logImpression: (impression: Impression) => void;
   /* Called when an error occurs. */
   handleLogError: (err: Error) => void;
   /* To override the visibility threshold. */
@@ -73,14 +82,19 @@ export const useImpressionTracker = (props: TrackerProps): TrackerResponse => {
         }
       }, [insertionId]);
 
-      const _logImpression = () => {
+      const logImpressionFunctor = () => {
         if (!logged) {
           setLogged(true);
           // In case there is a weird corner case where impressionId has not been set.
           if (impressionId === '') {
             setImpressionId(uuidv4());
           }
-          logImpression(impressionId);
+          logImpression({
+            common: {
+              impressionId,
+              insertionId,
+            },
+          });
         }
       };
 
@@ -89,7 +103,7 @@ export const useImpressionTracker = (props: TrackerProps): TrackerResponse => {
           if (!inView || logged) {
             return;
           }
-          const timer = setTimeout(_logImpression, visibilityTimeThreshold);
+          const timer = setTimeout(logImpressionFunctor, visibilityTimeThreshold);
           return () => clearTimeout(timer);
         },
         // TODO - should ref.current be in this?
@@ -98,7 +112,7 @@ export const useImpressionTracker = (props: TrackerProps): TrackerResponse => {
         [ref.current, inView]
       );
 
-      return [ref, impressionId, _logImpression];
+      return [ref, impressionId, logImpressionFunctor];
     } catch (error) {
       handleLogError(error);
     }
@@ -117,7 +131,7 @@ export const useImpressionTracker = (props: TrackerProps): TrackerResponse => {
 export interface WithImpressionTrackerProps {
   impressionRef: (node?: Element | null) => void;
   impressionId: string;
-  logImpression: () => void;
+  logImpression: (impression: Impression) => void;
 }
 
 /**
@@ -130,12 +144,13 @@ export interface WithImpressionTrackerProps {
 export const withImpressionTracker = <P extends WithImpressionTrackerProps>(
   Component: React.ComponentType<P>,
   getInsertionId: (props: Subtract<P, WithImpressionTrackerProps>) => string,
-  innerLogImpression: (impressionId: string) => void,
+  logImpression: (impression: Impression) => void,
   handleLogError: (err: Error) => void
 ): React.FC<Subtract<P, WithImpressionTrackerProps>> => (props: Subtract<P, WithImpressionTrackerProps>) => {
-  const [impressionRef, impressionId, logImpression] = useImpressionTracker({
-    insertionId: getInsertionId(props),
-    logImpression: innerLogImpression,
+  const insertionId = getInsertionId(props);
+  const [impressionRef, impressionId, logImpressionUnit] = useImpressionTracker({
+    insertionId,
+    logImpression,
     handleLogError,
   });
   return (
@@ -143,7 +158,7 @@ export const withImpressionTracker = <P extends WithImpressionTrackerProps>(
       {...(props as P)}
       impressionRef={impressionRef}
       impressionId={impressionId}
-      logImpression={logImpression}
+      logImpression={logImpressionUnit}
     />
   );
 };
