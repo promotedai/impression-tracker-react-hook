@@ -11,7 +11,10 @@ interface Props {
 export const HookedExampleComponent = ({ text }: Props) => {
   const [ref, impressionId, logImpression] = useImpressionTracker({
     insertionId: 'abc',
-    logImpression: (impressionId) => console.error(impressionId),
+    logImpression: (impression) => {
+      // Not tested.
+      throw JSON.stringify(impression);
+    },
     handleLogError: (err) => {
       throw err;
     },
