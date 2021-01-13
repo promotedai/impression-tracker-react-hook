@@ -1,3 +1,17 @@
+# [2.0.0](https://github.com/promotedai/impression-tracker-react-hook/compare/v1.1.0...v2.0.0) (2021-01-13)
+
+
+### Features
+
+* add impression type ([973d336](https://github.com/promotedai/impression-tracker-react-hook/commit/973d3364922f8587de9cd9ffa7f5d8e990a2ba80))
+
+
+### BREAKING CHANGES
+
+* this changes the signature on logImpression
+
+TESTING=manual
+
 # [1.1.0](https://github.com/promotedai/impression-tracker-react-hook/compare/v1.0.19...v1.1.0) (2021-01-13)
 
 
