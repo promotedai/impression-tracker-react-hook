@@ -1,3 +1,11 @@
+# [1.1.0](https://github.com/promotedai/impression-tracker-react-hook/compare/v1.0.19...v1.1.0) (2021-01-13)
+
+
+### Features
+
+* add hoc ([e171ed7](https://github.com/promotedai/impression-tracker-react-hook/commit/e171ed7ce0d7506542f3e1ad3891ebe541cf5775))
+* expose intersection options ([a0fdb2e](https://github.com/promotedai/impression-tracker-react-hook/commit/a0fdb2ecb170ffbcab4c89e43a5d13ffe54dfb85))
+
 ## [1.0.19](https://github.com/promotedai/impression-tracker-react-hook/compare/v1.0.18...v1.0.19) (2021-01-13)
 
 
