@@ -9,7 +9,7 @@ interface Props {
 
 // A simple component for testing useImpressionTracker.
 export const HookedExampleComponent = ({ text }: Props) => {
-  const [ref, impressionId, logImpression] = useImpressionTracker({
+  const [ref, impressionId, logImpressionFunctor] = useImpressionTracker({
     insertionId: 'abc',
     logImpression: (impression) => {
       // Not tested.
@@ -22,8 +22,8 @@ export const HookedExampleComponent = ({ text }: Props) => {
   if (impressionId === null) {
     throw Error('impressionId should not be null');
   }
-  if (logImpression === null) {
-    throw Error('logImpression should not be null');
+  if (logImpressionFunctor === null) {
+    throw Error('logImpressionFunctor should not be null');
   }
   return <div ref={ref}>{text}</div>;
 };
@@ -41,12 +41,12 @@ interface WrappedProps extends WithImpressionTrackerProps {
 }
 
 // A simple component for testing useImpressionTracker.
-export const WrappedExampleComponent = ({ impressionId, impressionRef, logImpression, text }: WrappedProps) => {
+export const WrappedExampleComponent = ({ impressionId, impressionRef, logImpressionFunctor, text }: WrappedProps) => {
   if (impressionId === null) {
     throw Error('impressionId should not be null');
   }
-  if (logImpression === null) {
-    throw Error('logImpression should not be null');
+  if (logImpressionFunctor === null) {
+    throw Error('logImpressionFunctor should not be null');
   }
   return <div ref={impressionRef}>{text}</div>;
 };
