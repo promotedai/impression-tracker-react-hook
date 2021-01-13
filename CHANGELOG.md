@@ -1,3 +1,10 @@
+## [1.0.19](https://github.com/promotedai/impression-tracker-react-hook/compare/v1.0.18...v1.0.19) (2021-01-13)
+
+
+### Bug Fixes
+
+* change npm release to use dist ([87ce8e0](https://github.com/promotedai/impression-tracker-react-hook/commit/87ce8e0ac7f4126c04a8e062776c6749dc720196))
+
 ## [1.0.18](https://github.com/promotedai/impression-tracker-react-hook/compare/v1.0.17...v1.0.18) (2021-01-13)
 
 
