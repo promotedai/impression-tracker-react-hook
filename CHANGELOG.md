@@ -1,3 +1,17 @@
+# [3.0.0](https://github.com/promotedai/impression-tracker-react-hook/compare/v2.0.0...v3.0.0) (2021-01-13)
+
+
+### Features
+
+* increment version ([4c3d9d7](https://github.com/promotedai/impression-tracker-react-hook/commit/4c3d9d739bb7efd330498e160e29a5eddc84ff09))
+
+
+### BREAKING CHANGES
+
+* logImpressionFunctor
+
+TESTING=manual
+
 # [2.0.0](https://github.com/promotedai/impression-tracker-react-hook/compare/v1.1.0...v2.0.0) (2021-01-13)
 
 
