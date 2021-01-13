@@ -68,29 +68,35 @@ export const useImpressionTracker = (args: TrackerArguments): TrackerResponse =>
   if (typeof window !== 'undefined' && typeof window.IntersectionObserver !== 'undefined') {
     try {
       const [ref, inView] = useInView(intersectionOptions);
-      const [prevInsertionId, setInsertionId] = useState('');
-      const [impressionId, setImpressionId] = useState('');
+      const [currentInsertionId, setInsertionId] = useState('');
+      const [currentImpressionId, setImpressionId] = useState('');
       const [logged, setLogged] = useState(false);
 
-      // Generate a new UUID on mount.
-      useEffect(() => {
+      const _setIds = () => {
         // This React hook is designed to be used with only one Insertion.
-        if (prevInsertionId !== '' && insertionId !== prevInsertionId) {
+        if (currentInsertionId !== '' && insertionId !== currentInsertionId) {
           handleLogError(new Error('The same useImpressionTracker should not be used with multiple insertions'));
         }
         setInsertionId(insertionId);
-        // Only generate an impressionId if not set.
-        if (impressionId === '') {
-          setImpressionId(uuidv4());
-        }
+        // When insertionId changes, change the impressionId.  This is in case
+        // the client has bugs.
+        const impressionId = uuidv4();
+        setImpressionId(impressionId);
+        return impressionId;
+      };
+
+      // Generate a new UUID on mount.
+      useEffect(() => {
+        _setIds();
       }, [insertionId]);
 
       const logImpressionFunctor = () => {
         if (!logged) {
           setLogged(true);
           // In case there is a weird corner case where impressionId has not been set.
+          let impressionId = currentImpressionId;
           if (impressionId === '') {
-            setImpressionId(uuidv4());
+            impressionId = _setIds();
           }
           logImpression({
             common: {
@@ -115,7 +121,7 @@ export const useImpressionTracker = (args: TrackerArguments): TrackerResponse =>
         [ref.current, inView]
       );
 
-      return [ref, impressionId, logImpressionFunctor];
+      return [ref, currentImpressionId, logImpressionFunctor];
     } catch (error) {
       handleLogError(error);
     }
