@@ -51,14 +51,13 @@ export const WrappedExampleComponent = ({ impressionId, impressionRef, logImpres
   return <div ref={impressionRef}>{text}</div>;
 };
 
-const TrackedExampleComponent = withImpressionTracker(
-  WrappedExampleComponent,
-  () => 'test-insertion',
-  () => null,
-  (err) => {
+const TrackedExampleComponent = withImpressionTracker(WrappedExampleComponent, {
+  getInsertionId: () => 'test-insertion',
+  logImpression: () => null,
+  handleLogError: (err) => {
     throw err;
-  }
-);
+  },
+});
 
 describe('useImpressionTracker', () => {
   it('just make sure simple render works', () => {
