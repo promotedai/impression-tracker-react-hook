@@ -1,3 +1,10 @@
+## [5.0.1](https://github.com/promotedai/impression-tracker-react-hook/compare/v5.0.0...v5.0.1) (2021-01-27)
+
+
+### Bug Fixes
+
+* hide no-insertion-id error when disabled ([3c841e5](https://github.com/promotedai/impression-tracker-react-hook/commit/3c841e5fd75ceffac2d5e8cbb6c70a241ac891c6))
+
 # [5.0.0](https://github.com/promotedai/impression-tracker-react-hook/compare/v4.0.0...v5.0.0) (2021-01-27)
 
 
