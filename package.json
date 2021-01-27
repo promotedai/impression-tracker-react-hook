@@ -8,6 +8,7 @@
     "build": "npm run build:clean && npm run build:lib",
     "build:clean": "rimraf dist",
     "build:lib": "rollup -c",
+    "updateLink": "npm run build:clean && npm run build && cd dist && npm link",
     "lint": "eslint './{src,app}/**/*.{ts,tsx}'",
     "test": "jest --coverage",
     "test:watch": "jest --watchAll",
