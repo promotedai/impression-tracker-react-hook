@@ -1,3 +1,10 @@
+## [3.0.2](https://github.com/promotedai/impression-tracker-react-hook/compare/v3.0.1...v3.0.2) (2021-01-27)
+
+
+### Bug Fixes
+
+* trigger a push ([c6642d4](https://github.com/promotedai/impression-tracker-react-hook/commit/c6642d4780546e5de1a36e0740267b25dccefc5e))
+
 ## [3.0.1](https://github.com/promotedai/impression-tracker-react-hook/compare/v3.0.0...v3.0.1) (2021-01-13)
 
 
