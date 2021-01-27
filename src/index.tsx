@@ -151,7 +151,7 @@ export const useImpressionTracker = (args: TrackerArguments): TrackerResponse =>
 
 export interface HocTrackerArguments<P extends WithImpressionTrackerProps> {
   /* A quick way to disable the hook. */
-  enable?: boolean;
+  isEnabled?: (props: Subtract<P, WithImpressionTrackerProps>) => boolean;
   /* Get the insertion from the props. */
   getInsertionId: (props: Subtract<P, WithImpressionTrackerProps>) => string;
   /* Called when we should log an impression. */
@@ -184,7 +184,7 @@ export const withImpressionTracker = <P extends WithImpressionTrackerProps>(
 ): React.FC<Subtract<P, WithImpressionTrackerProps>> => {
   const fn = (props: Subtract<P, WithImpressionTrackerProps>) => {
     const {
-      enable,
+      isEnabled,
       getInsertionId,
       logImpression,
       handleLogError,
@@ -192,7 +192,7 @@ export const withImpressionTracker = <P extends WithImpressionTrackerProps>(
       visibilityTimeThreshold,
     } = args;
     const hookArgs: TrackerArguments = {
-      enable,
+      enable: isEnabled === undefined ? true : isEnabled(props),
       insertionId: getInsertionId(props),
       logImpression,
       handleLogError,
