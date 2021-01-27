@@ -1,3 +1,17 @@
+# [5.0.0](https://github.com/promotedai/impression-tracker-react-hook/compare/v4.0.0...v5.0.0) (2021-01-27)
+
+
+### Features
+
+* change hoc's isenabled to take props ([46a91c4](https://github.com/promotedai/impression-tracker-react-hook/commit/46a91c45de2ec4622683367f6820ef8fa11f0b73))
+
+
+### BREAKING CHANGES
+
+* change the withImpressionTracker HOC
+
+TESTING=manual
+
 # [4.0.0](https://github.com/promotedai/impression-tracker-react-hook/compare/v3.0.2...v4.0.0) (2021-01-27)
 
 
