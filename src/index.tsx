@@ -75,7 +75,11 @@ export const useImpressionTracker = (args: TrackerArguments): TrackerResponse =>
       const _setIds = () => {
         // This React hook is designed to be used with only one Insertion.
         if (currentInsertionId !== '' && insertionId !== currentInsertionId) {
-          handleLogError(new Error('The same useImpressionTracker should not be used with multiple insertions'));
+          handleLogError(
+            new Error(
+              `The same useImpressionTracker should not be used with multiple insertions. currentInsertionId=${currentInsertionId}, insertionId=${insertionId}, currentInsertionId=${currentInsertionId}`
+            )
+          );
         }
         setInsertionId(insertionId);
         // When insertionId changes, change the impressionId.  This is in case
