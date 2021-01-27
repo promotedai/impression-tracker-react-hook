@@ -1,3 +1,17 @@
+# [4.0.0](https://github.com/promotedai/impression-tracker-react-hook/compare/v3.0.2...v4.0.0) (2021-01-27)
+
+
+### Features
+
+* dict arg, displayname and undefined insertionid ([4d4af57](https://github.com/promotedai/impression-tracker-react-hook/commit/4d4af576ecf039eb39dc9795ff46182933a7e85e))
+
+
+### BREAKING CHANGES
+
+* - changes the HOC interface
+
+TESTING=unit tests
+
 ## [3.0.2](https://github.com/promotedai/impression-tracker-react-hook/compare/v3.0.1...v3.0.2) (2021-01-27)
 
 
