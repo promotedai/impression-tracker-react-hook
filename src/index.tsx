@@ -191,9 +191,10 @@ export const withImpressionTracker = <P extends WithImpressionTrackerProps>(
       intersectionOptions,
       visibilityTimeThreshold,
     } = args;
+    const enable = isEnabled === undefined ? true : isEnabled(props);
     const hookArgs: TrackerArguments = {
-      enable: isEnabled === undefined ? true : isEnabled(props),
-      insertionId: getInsertionId(props),
+      enable,
+      insertionId: enable ? getInsertionId(props) : '',
       logImpression,
       handleLogError,
       intersectionOptions,
