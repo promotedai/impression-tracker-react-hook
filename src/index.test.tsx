@@ -51,18 +51,43 @@ export const WrappedExampleComponent = ({ impressionId, impressionRef, logImpres
   return <div ref={impressionRef}>{text}</div>;
 };
 
-const TrackedExampleComponent = withImpressionTracker(WrappedExampleComponent, {
-  getInsertionId: () => 'test-insertion',
-  logImpression: () => null,
-  handleLogError: (err) => {
-    throw err;
-  },
-});
+describe('ImpressionTrackerHOC', () => {
+  const TrackedExampleComponent = withImpressionTracker(WrappedExampleComponent, {
+    getInsertionId: () => 'test-insertion',
+    logImpression: () => null,
+    handleLogError: (err) => {
+      throw err;
+    },
+  });
 
-describe('useImpressionTracker', () => {
   it('just make sure simple render works', () => {
     const { getByText } = render(<TrackedExampleComponent text="component works" />);
     expect(getByText('component works')).toBeInTheDocument();
   });
-  // TODO - add tests for interactions.
+
+  const DisabledTrackedExampleComponent = withImpressionTracker(WrappedExampleComponent, {
+    isEnabled: () => false,
+    getInsertionId: () => '',
+    logImpression: () => null,
+    handleLogError: (err) => {
+      throw err;
+    },
+  });
+
+  it('disabled', () => {
+    const { getByText } = render(<DisabledTrackedExampleComponent text="component works" />);
+    expect(getByText('component works')).toBeInTheDocument();
+  });
+
+  const NoInsertionTrackedExampleComponent = withImpressionTracker(WrappedExampleComponent, {
+    getInsertionId: () => '',
+    logImpression: () => null,
+    handleLogError: (err) => {
+      throw err;
+    },
+  });
+
+  it('no insertionId throws', () => {
+    expect(() => render(<NoInsertionTrackedExampleComponent text="component works" />)).toThrow();
+  });
 });
