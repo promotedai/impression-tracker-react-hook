@@ -1,3 +1,10 @@
+## [5.0.2](https://github.com/promotedai/impression-tracker-react-hook/compare/v5.0.1...v5.0.2) (2021-01-28)
+
+
+### Bug Fixes
+
+* how enable==undefined works ([4787f6b](https://github.com/promotedai/impression-tracker-react-hook/commit/4787f6b2d3715ead6b85b0b2d408d0be5190d821))
+
 ## [5.0.1](https://github.com/promotedai/impression-tracker-react-hook/compare/v5.0.0...v5.0.1) (2021-01-27)
 
 
