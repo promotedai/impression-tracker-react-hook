@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import 'intersection-observer';
 import { IntersectionOptions, useInView } from 'react-intersection-observer';
+
 // TODO - switch to dynamic import approach.
 
 // TODO - support polyfill.
