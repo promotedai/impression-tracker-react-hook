@@ -1,3 +1,15 @@
+# [6.0.0](https://github.com/promotedai/impression-tracker-react-hook/compare/v5.1.0...v6.0.0) (2021-03-27)
+
+
+### Features
+
+* force a breaking change for new protos ([7f5138a](https://github.com/promotedai/impression-tracker-react-hook/commit/7f5138aaac4dca5bbcfe8009f9265352f1b8098a))
+
+
+### BREAKING CHANGES
+
+* the last commit switched to using new protos that break the interface
+
 # [5.1.0](https://github.com/promotedai/impression-tracker-react-hook/compare/v5.0.2...v5.1.0) (2021-03-27)
 
 
