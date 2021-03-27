@@ -1,3 +1,10 @@
+# [5.1.0](https://github.com/promotedai/impression-tracker-react-hook/compare/v5.0.2...v5.1.0) (2021-03-27)
+
+
+### Features
+
+* switch to new proto schema ([8fccfc4](https://github.com/promotedai/impression-tracker-react-hook/commit/8fccfc407f9072db08cd3bf11dbf7b171790de4a))
+
 ## [5.0.2](https://github.com/promotedai/impression-tracker-react-hook/compare/v5.0.1...v5.0.2) (2021-01-28)
 
 
