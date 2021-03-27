@@ -13,13 +13,9 @@ import { IntersectionOptions, useInView } from 'react-intersection-observer';
 const DEFAULT_VISIBILITY_RATIO_THRESHOLD = 0.5;
 const DEFAULT_VISIBILITY_TIME_THRESHOLD = 1000;
 
-export interface CommonImpression {
+export interface Impression {
   insertionId: string;
   impressionId: string;
-}
-
-export interface Impression {
-  common: CommonImpression;
 }
 
 interface TrackerArguments {
@@ -110,10 +106,8 @@ export const useImpressionTracker = (args: TrackerArguments): TrackerResponse =>
               impressionId = _setIds();
             }
             logImpression({
-              common: {
-                impressionId,
-                insertionId,
-              },
+              impressionId,
+              insertionId,
             });
           }
         };
