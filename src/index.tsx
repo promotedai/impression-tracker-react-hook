@@ -21,21 +21,21 @@ export interface Impression {
 }
 
 interface TrackerArguments {
-  /* A quick way to disable the hook. */
+  /* A quick way to disable the hook. Defaults to true.*/
   enable?: boolean;
-  /* The (pre-impression) insertionId to log on the impressionId. */
+  /* The (pre-impression) insertionId to log on the impressionId. Defauls to undefined. */
   insertionId?: string;
-  /* The contentId to log on the impressionId. */
+  /* The contentId to log on the impressionId. Defaults to undefined. */
   contentId?: string;
   /* Called when we should log an impression. */
   logImpression: (impression: Impression) => void;
   /* Called when an error occurs. */
   handleError: (err: Error) => void;
-  /* To override the visibility threshold. */
+  /* To override the visibility threshold. Defaults to 50% visible. */
   intersectionOptions?: IntersectionOptions;
-  /* A way to override for testing. */
+  /* A way to override for testing. Defaults to uuidv4. */
   uuid?: () => string;
-  /* To override the visibility threshold. */
+  /* To override the visibility threshold. Defaults to 1s. */
   visibilityTimeThreshold?: number;
 }
 
@@ -166,21 +166,21 @@ export const useImpressionTracker = (args: TrackerArguments): TrackerResponse =>
 };
 
 export interface HocTrackerArguments<P extends WithImpressionTrackerProps> {
-  /* A quick way to disable the hook. */
+  /* A quick way to disable the hook. Defaults to true. */
   isEnabled?: (props: Subtract<P, WithImpressionTrackerProps>) => boolean;
-  /* Get the insertion ID from the props. */
+  /* Get the insertion ID from the props. Defaults to empty string. */
   getInsertionId?: (props: Subtract<P, WithImpressionTrackerProps>) => string;
-  /* Get the content ID from the props. */
+  /* Get the content ID from the props. defaults to empty string. */
   getContentId?: (props: Subtract<P, WithImpressionTrackerProps>) => string;
   /* Called when we should log an impression. */
   logImpression: (impression: Impression) => void;
   /* Called when an error occurs. */
   handleError: (err: Error) => void;
-  /* To override the visibility threshold. */
+  /* To override the visibility threshold. Defaults to 50% visible. */
   intersectionOptions?: IntersectionOptions;
-  /* A way to override for testing. */
+  /* A way to override for testing. Defaults to uuidv4. */
   uuid?: () => string;
-  /* To override the visibility threshold. */
+  /* To override the visibility threshold. Defaults to 1s.*/
   visibilityTimeThreshold?: number;
 }
 
