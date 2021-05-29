@@ -1,3 +1,10 @@
+# [6.1.0](https://github.com/promotedai/impression-tracker-react-hook/compare/v6.0.0...v6.1.0) (2021-05-29)
+
+
+### Features
+
+* support contentId.  rename handleLogError. tests ([b5e779f](https://github.com/promotedai/impression-tracker-react-hook/commit/b5e779f890c4cd6a612d61515b7cf6d1ed7d1195))
+
 # [6.0.0](https://github.com/promotedai/impression-tracker-react-hook/compare/v5.1.0...v6.0.0) (2021-03-27)
 
 
