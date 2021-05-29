@@ -1,93 +1,378 @@
 import React from 'react';
 import { render } from '@testing-library/react';
-import { WithImpressionTrackerProps, useImpressionTracker, withImpressionTracker } from '.';
+import { Impression, WithImpressionTrackerProps, useImpressionTracker, withImpressionTracker } from '.';
 import 'intersection-observer';
+import { mockAllIsIntersecting } from 'react-intersection-observer/test-utils';
+import { act } from 'react-dom/test-utils';
+
+jest.useFakeTimers();
+
+const fakeUuid = () => {
+  let i = 0;
+  return () => {
+    return 'uuid' + i++;
+  };
+};
 
 interface Props {
+  enable?: boolean;
+  insertionId?: string;
+  contentId?: string;
   text: string;
+  logImpression: (impression: Impression) => void;
+  handleError?: (err: Error) => void;
 }
 
+// So we can get the logImpressionFunctor
+let latestLogImpressionFunctor: () => void = () => {
+  /* no op */
+};
+
 // A simple component for testing useImpressionTracker.
-export const HookedExampleComponent = ({ text }: Props) => {
+const HookedExampleComponent = ({
+  text,
+  enable,
+  insertionId,
+  contentId,
+  logImpression,
+  handleError = (err) => {
+    throw err;
+  },
+}: Props) => {
   const [ref, impressionId, logImpressionFunctor] = useImpressionTracker({
-    insertionId: 'abc',
-    logImpression: (impression) => {
-      // Not tested.
-      throw JSON.stringify(impression);
-    },
-    handleLogError: (err) => {
-      throw err;
-    },
+    enable,
+    insertionId,
+    contentId,
+    handleError,
+    logImpression,
+    uuid: fakeUuid(),
   });
   if (impressionId === null) {
     throw Error('impressionId should not be null');
   }
+  // TODO - add unit test that verifies that logImpressionFunctor won't call again.
   if (logImpressionFunctor === null) {
     throw Error('logImpressionFunctor should not be null');
   }
+  latestLogImpressionFunctor = logImpressionFunctor;
   return <div ref={ref}>{text}</div>;
 };
 
+const runAllTimers = () =>
+  act(() => {
+    jest.runAllTimers();
+  });
+
 describe('useImpressionTracker', () => {
-  it('just make sure simple render works', () => {
-    const { getByText } = render(<HookedExampleComponent text="component works" />);
+  it('set insertionId', () => {
+    const logImpression = jest.fn();
+    const { getByText } = render(
+      <HookedExampleComponent text="component works" insertionId="uuid9" logImpression={logImpression} />
+    );
+    expect(logImpression.mock.calls).toEqual([]);
+    mockAllIsIntersecting(true);
+    expect(logImpression.mock.calls).toEqual([]);
+    runAllTimers();
     expect(getByText('component works')).toBeInTheDocument();
-  });
-  // TODO - add tests for interactions.
-});
-
-interface WrappedProps extends WithImpressionTrackerProps {
-  text: string;
-}
-
-// A simple component for testing useImpressionTracker.
-export const WrappedExampleComponent = ({ impressionId, impressionRef, logImpressionFunctor, text }: WrappedProps) => {
-  if (impressionId === null) {
-    throw Error('impressionId should not be null');
-  }
-  if (logImpressionFunctor === null) {
-    throw Error('logImpressionFunctor should not be null');
-  }
-  return <div ref={impressionRef}>{text}</div>;
-};
-
-describe('ImpressionTrackerHOC', () => {
-  const TrackedExampleComponent = withImpressionTracker(WrappedExampleComponent, {
-    getInsertionId: () => 'test-insertion',
-    logImpression: () => null,
-    handleLogError: (err) => {
-      throw err;
-    },
+    expect(logImpression.mock.calls).toEqual([
+      [
+        {
+          impressionId: 'uuid0',
+          insertionId: 'uuid9',
+        },
+      ],
+    ]);
   });
 
-  it('just make sure simple render works', () => {
-    const { getByText } = render(<TrackedExampleComponent text="component works" />);
+  it('set contentId', () => {
+    const logImpression = jest.fn();
+    const { getByText } = render(
+      <HookedExampleComponent text="component works" contentId="abc" logImpression={logImpression} />
+    );
+    expect(logImpression.mock.calls).toEqual([]);
+    mockAllIsIntersecting(true);
+    expect(logImpression.mock.calls).toEqual([]);
+    runAllTimers();
     expect(getByText('component works')).toBeInTheDocument();
+    expect(logImpression.mock.calls).toEqual([
+      [
+        {
+          contentId: 'abc',
+          impressionId: 'uuid0',
+        },
+      ],
+    ]);
   });
 
-  const DisabledTrackedExampleComponent = withImpressionTracker(WrappedExampleComponent, {
-    isEnabled: () => false,
-    getInsertionId: () => '',
-    logImpression: () => null,
-    handleLogError: (err) => {
-      throw err;
-    },
+  it('set insertionId and contentId', () => {
+    const logImpression = jest.fn();
+    const { getByText } = render(
+      <HookedExampleComponent
+        text="component works"
+        contentId="abc"
+        insertionId="uuid9"
+        logImpression={logImpression}
+      />
+    );
+    expect(logImpression.mock.calls).toEqual([]);
+    mockAllIsIntersecting(true);
+    expect(logImpression.mock.calls).toEqual([]);
+    runAllTimers();
+    expect(getByText('component works')).toBeInTheDocument();
+    expect(logImpression.mock.calls).toEqual([
+      [
+        {
+          contentId: 'abc',
+          impressionId: 'uuid0',
+          insertionId: 'uuid9',
+        },
+      ],
+    ]);
   });
 
   it('disabled', () => {
-    const { getByText } = render(<DisabledTrackedExampleComponent text="component works" />);
+    const logImpression = jest.fn();
+    const { getByText } = render(
+      <HookedExampleComponent
+        enable={false}
+        text="component works"
+        contentId="abc"
+        insertionId="uuid9"
+        logImpression={logImpression}
+      />
+    );
+    expect(logImpression.mock.calls).toEqual([]);
+    mockAllIsIntersecting(true);
+    expect(logImpression.mock.calls).toEqual([]);
+    runAllTimers();
     expect(getByText('component works')).toBeInTheDocument();
+    expect(logImpression.mock.calls).toEqual([]);
   });
 
-  const NoInsertionTrackedExampleComponent = withImpressionTracker(WrappedExampleComponent, {
-    getInsertionId: () => '',
-    logImpression: () => null,
-    handleLogError: (err) => {
-      throw err;
-    },
+  it('make sure impression logs once', () => {
+    const logImpression = jest.fn();
+    const { getByText } = render(
+      <HookedExampleComponent
+        text="component works"
+        contentId="abc"
+        insertionId="uuid9"
+        logImpression={logImpression}
+      />
+    );
+    expect(logImpression.mock.calls).toEqual([]);
+    mockAllIsIntersecting(true);
+    expect(logImpression.mock.calls).toEqual([]);
+    runAllTimers();
+    expect(getByText('component works')).toBeInTheDocument();
+    const impression1 = {
+      contentId: 'abc',
+      impressionId: 'uuid0',
+      insertionId: 'uuid9',
+    };
+    expect(logImpression.mock.calls).toEqual([[impression1]]);
+    mockAllIsIntersecting(false);
+    expect(logImpression.mock.calls).toEqual([[impression1]]);
+    runAllTimers();
+    expect(logImpression.mock.calls).toEqual([[impression1]]);
+    mockAllIsIntersecting(true);
+    expect(logImpression.mock.calls).toEqual([[impression1]]);
+    runAllTimers();
+    expect(logImpression.mock.calls).toEqual([[impression1]]);
   });
 
-  it('no insertionId throws', () => {
-    expect(() => render(<NoInsertionTrackedExampleComponent text="component works" />)).toThrow();
+  it('call latestLogImpressionFunctor', () => {
+    const logImpression = jest.fn();
+    const { getByText } = render(
+      <HookedExampleComponent
+        text="component works"
+        contentId="abc"
+        insertionId="uuid9"
+        logImpression={logImpression}
+      />
+    );
+    expect(logImpression.mock.calls).toEqual([]);
+    const impression1 = {
+      contentId: 'abc',
+      impressionId: 'uuid0',
+      insertionId: 'uuid9',
+    };
+    act(() => latestLogImpressionFunctor());
+    expect(logImpression.mock.calls).toEqual([[impression1]]);
+    mockAllIsIntersecting(true);
+    expect(logImpression.mock.calls).toEqual([[impression1]]);
+    runAllTimers();
+    expect(getByText('component works')).toBeInTheDocument();
+    expect(logImpression.mock.calls).toEqual([[impression1]]);
+  });
+
+  it('call latestLogImpressionFunctor after impression', () => {
+    const logImpression = jest.fn();
+    const { getByText } = render(
+      <HookedExampleComponent
+        text="component works"
+        contentId="abc"
+        insertionId="uuid9"
+        logImpression={logImpression}
+      />
+    );
+    expect(logImpression.mock.calls).toEqual([]);
+    expect(logImpression.mock.calls).toEqual([]);
+    mockAllIsIntersecting(true);
+    expect(logImpression.mock.calls).toEqual([]);
+    runAllTimers();
+    const impression1 = {
+      contentId: 'abc',
+      impressionId: 'uuid0',
+      insertionId: 'uuid9',
+    };
+    expect(getByText('component works')).toBeInTheDocument();
+    expect(logImpression.mock.calls).toEqual([[impression1]]);
+    act(() => latestLogImpressionFunctor());
+    expect(logImpression.mock.calls).toEqual([[impression1]]);
+  });
+
+  it('no IDs - throw', () => {
+    const logImpression = jest.fn();
+    expect(() => render(<HookedExampleComponent text="component works" logImpression={logImpression} />));
+  });
+
+  it('no IDs - do nothing', () => {
+    const logImpression = jest.fn();
+    const { getByText } = render(
+      <HookedExampleComponent text="component works" logImpression={logImpression} handleError={() => undefined} />
+    );
+    expect(logImpression.mock.calls).toEqual([]);
+    mockAllIsIntersecting(true);
+    expect(logImpression.mock.calls).toEqual([]);
+    runAllTimers();
+    expect(getByText('component works')).toBeInTheDocument();
+    expect(logImpression.mock.calls).toEqual([]);
+  });
+
+  interface WrappedProps extends WithImpressionTrackerProps {
+    text: string;
+  }
+
+  // A simple component for testing useImpressionTracker.
+  const WrappedExampleComponent = ({ impressionId, impressionRef, logImpressionFunctor, text }: WrappedProps) => {
+    if (impressionId === null) {
+      throw Error('impressionId should not be null');
+    }
+    if (logImpressionFunctor === null) {
+      throw Error('logImpressionFunctor should not be null');
+    }
+    return <div ref={impressionRef}>{text}</div>;
+  };
+
+  describe('ImpressionTrackerHOC', () => {
+    it('insertionId', () => {
+      const logImpression = jest.fn();
+      const InsertionIdTrackedExampleComponent = withImpressionTracker(WrappedExampleComponent, {
+        logImpression,
+        handleError: (err: Error) => {
+          throw err;
+        },
+        getInsertionId: () => 'uuid9',
+        uuid: fakeUuid(),
+      });
+      const { getByText } = render(<InsertionIdTrackedExampleComponent text="component works" />);
+      expect(getByText('component works')).toBeInTheDocument();
+      expect(logImpression.mock.calls).toEqual([]);
+      mockAllIsIntersecting(true);
+      expect(logImpression.mock.calls).toEqual([]);
+      runAllTimers();
+      expect(logImpression.mock.calls).toEqual([
+        [
+          {
+            impressionId: 'uuid0',
+            insertionId: 'uuid9',
+          },
+        ],
+      ]);
+    });
+
+    it('contentId', () => {
+      const logImpression = jest.fn();
+      const ContentIdTrackedExampleComponent = withImpressionTracker(WrappedExampleComponent, {
+        logImpression,
+        handleError: (err: Error) => {
+          throw err;
+        },
+        getContentId: () => 'abc',
+        uuid: fakeUuid(),
+      });
+      const { getByText } = render(<ContentIdTrackedExampleComponent text="component works" />);
+      expect(getByText('component works')).toBeInTheDocument();
+      expect(logImpression.mock.calls).toEqual([]);
+      mockAllIsIntersecting(true);
+      expect(logImpression.mock.calls).toEqual([]);
+      runAllTimers();
+      expect(logImpression.mock.calls).toEqual([
+        [
+          {
+            impressionId: 'uuid0',
+            contentId: 'abc',
+          },
+        ],
+      ]);
+    });
+
+    it('disabled', () => {
+      const logImpression = jest.fn();
+      const DisabledTrackedExampleComponent = withImpressionTracker(WrappedExampleComponent, {
+        logImpression,
+        handleError: (err: Error) => {
+          throw err;
+        },
+        isEnabled: () => false,
+        getInsertionId: () => '',
+        uuid: fakeUuid(),
+      });
+      const { getByText } = render(<DisabledTrackedExampleComponent text="component works" />);
+      expect(getByText('component works')).toBeInTheDocument();
+      expect(logImpression.mock.calls).toEqual([]);
+      mockAllIsIntersecting(true);
+      expect(logImpression.mock.calls).toEqual([]);
+      runAllTimers();
+      expect(logImpression.mock.calls).toEqual([]);
+    });
+
+    it('no IDs - throws', () => {
+      const logImpression = jest.fn();
+      const NoIdsTrackedExampleComponent = withImpressionTracker(WrappedExampleComponent, {
+        logImpression,
+        handleError: (err: Error) => {
+          throw err;
+        },
+        getInsertionId: () => '',
+        getContentId: () => '',
+        uuid: fakeUuid(),
+      });
+      expect(() => {
+        // Sadly, this still outputs a console.error to the log before the exception is thrown.
+        // There isn't a great way to fix this.
+        render(<NoIdsTrackedExampleComponent text="component works" />);
+      }).toThrow();
+    });
+
+    it('no IDs - do nothing', () => {
+      const logImpression = jest.fn();
+      const DisabledTrackedExampleComponent = withImpressionTracker(WrappedExampleComponent, {
+        logImpression,
+        handleError: () => {
+          undefined;
+        },
+        isEnabled: () => false,
+        getInsertionId: () => '',
+        uuid: fakeUuid(),
+      });
+      const { getByText } = render(<DisabledTrackedExampleComponent text="component works" />);
+      expect(getByText('component works')).toBeInTheDocument();
+      expect(logImpression.mock.calls).toEqual([]);
+      mockAllIsIntersecting(true);
+      expect(logImpression.mock.calls).toEqual([]);
+      runAllTimers();
+      expect(logImpression.mock.calls).toEqual([]);
+    });
   });
 });
