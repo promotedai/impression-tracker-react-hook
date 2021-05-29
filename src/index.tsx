@@ -15,22 +15,27 @@ const DEFAULT_VISIBILITY_RATIO_THRESHOLD = 0.5;
 const DEFAULT_VISIBILITY_TIME_THRESHOLD = 1000;
 
 export interface Impression {
-  insertionId: string;
+  insertionId?: string;
+  contentId?: string;
   impressionId: string;
 }
 
 interface TrackerArguments {
-  /* A quick way to disable the hook. */
+  /* A quick way to disable the hook. Defaults to true.*/
   enable?: boolean;
-  /* The (pre-impression) insertionId to log on the impressionId. */
-  insertionId: string;
+  /* The (pre-impression) insertionId to log on the impressionId. Defauls to undefined. */
+  insertionId?: string;
+  /* The contentId to log on the impressionId. Defaults to undefined. */
+  contentId?: string;
   /* Called when we should log an impression. */
   logImpression: (impression: Impression) => void;
   /* Called when an error occurs. */
-  handleLogError: (err: Error) => void;
-  /* To override the visibility threshold. */
+  handleError: (err: Error) => void;
+  /* To override the visibility threshold. Defaults to 50% visible. */
   intersectionOptions?: IntersectionOptions;
-  /* To override the visibility threshold. */
+  /* A way to override for testing. Defaults to uuidv4. */
+  uuid?: () => string;
+  /* To override the visibility threshold. Defaults to 1s. */
   visibilityTimeThreshold?: number;
 }
 
@@ -57,38 +62,48 @@ type TrackerResponse = [(node?: Element | null) => void, string, () => void];
 export const useImpressionTracker = (args: TrackerArguments): TrackerResponse => {
   const {
     enable = true,
-    insertionId,
+    insertionId = '',
+    contentId = '',
     logImpression,
-    handleLogError,
+    handleError,
     intersectionOptions = {
       threshold: DEFAULT_VISIBILITY_RATIO_THRESHOLD,
     },
+    uuid = uuidv4,
     visibilityTimeThreshold = DEFAULT_VISIBILITY_TIME_THRESHOLD,
   } = args;
   if (enable) {
-    if (insertionId === '' || insertionId === undefined) {
-      handleLogError(new Error('insertionId should be a non-empty string'));
-    }
-    if (typeof window !== 'undefined' && typeof window.IntersectionObserver !== 'undefined') {
+    if ((insertionId === '' || insertionId === undefined) && (contentId === '' || contentId === undefined)) {
+      handleError(new Error('insertionId or contentId should be set'));
+    } else if (typeof window !== 'undefined' && typeof window.IntersectionObserver !== 'undefined') {
       try {
         const [ref, inView] = useInView(intersectionOptions);
         const [currentInsertionId, setInsertionId] = useState('');
+        const [currentContentId, setContentId] = useState('');
         const [currentImpressionId, setImpressionId] = useState('');
         const [logged, setLogged] = useState(false);
 
         const _setIds = () => {
           // This React hook is designed to be used with only one Insertion.
           if (currentInsertionId !== undefined && currentInsertionId !== '' && insertionId !== currentInsertionId) {
-            handleLogError(
+            handleError(
               new Error(
                 `The same useImpressionTracker should not be used with multiple insertions. currentInsertionId=${currentInsertionId}, insertionId=${insertionId}, currentInsertionId=${currentInsertionId}`
               )
             );
           }
+          if (currentContentId !== undefined && currentContentId !== '' && contentId !== currentContentId) {
+            handleError(
+              new Error(
+                `The same useImpressionTracker should not be used with multiple contents. currentContentId=${currentContentId}, contentId=${contentId}, currentContentId=${currentContentId}`
+              )
+            );
+          }
           setInsertionId(insertionId);
+          setContentId(contentId);
           // When insertionId changes, change the impressionId.  This is in case
           // the client has bugs.
-          const impressionId = uuidv4();
+          const impressionId = uuid();
           setImpressionId(impressionId);
           return impressionId;
         };
@@ -96,7 +111,7 @@ export const useImpressionTracker = (args: TrackerArguments): TrackerResponse =>
         // Generate a new UUID on mount.
         useEffect(() => {
           _setIds();
-        }, [insertionId]);
+        }, [insertionId, contentId]);
 
         const logImpressionFunctor = () => {
           if (!logged) {
@@ -106,10 +121,16 @@ export const useImpressionTracker = (args: TrackerArguments): TrackerResponse =>
             if (impressionId === '') {
               impressionId = _setIds();
             }
-            logImpression({
+            const impression: Impression = {
               impressionId,
-              insertionId,
-            });
+            };
+            if (insertionId) {
+              impression.insertionId = insertionId;
+            }
+            if (contentId) {
+              impression.contentId = contentId;
+            }
+            logImpression(impression);
           }
         };
 
@@ -129,7 +150,7 @@ export const useImpressionTracker = (args: TrackerArguments): TrackerResponse =>
 
         return [ref, currentImpressionId, logImpressionFunctor];
       } catch (error) {
-        handleLogError(error);
+        handleError(error);
       }
     }
   }
@@ -145,17 +166,21 @@ export const useImpressionTracker = (args: TrackerArguments): TrackerResponse =>
 };
 
 export interface HocTrackerArguments<P extends WithImpressionTrackerProps> {
-  /* A quick way to disable the hook. */
+  /* A quick way to disable the hook. Defaults to true. */
   isEnabled?: (props: Subtract<P, WithImpressionTrackerProps>) => boolean;
-  /* Get the insertion from the props. */
-  getInsertionId: (props: Subtract<P, WithImpressionTrackerProps>) => string;
+  /* Get the insertion ID from the props. Defaults to empty string. */
+  getInsertionId?: (props: Subtract<P, WithImpressionTrackerProps>) => string;
+  /* Get the content ID from the props. defaults to empty string. */
+  getContentId?: (props: Subtract<P, WithImpressionTrackerProps>) => string;
   /* Called when we should log an impression. */
   logImpression: (impression: Impression) => void;
   /* Called when an error occurs. */
-  handleLogError: (err: Error) => void;
-  /* To override the visibility threshold. */
+  handleError: (err: Error) => void;
+  /* To override the visibility threshold. Defaults to 50% visible. */
   intersectionOptions?: IntersectionOptions;
-  /* To override the visibility threshold. */
+  /* A way to override for testing. Defaults to uuidv4. */
+  uuid?: () => string;
+  /* To override the visibility threshold. Defaults to 1s.*/
   visibilityTimeThreshold?: number;
 }
 
@@ -171,7 +196,7 @@ export interface WithImpressionTrackerProps {
  * @param Component          the Component to wrap
  * @param getInsertionId     gets the insertionId from the props
  * @param innerLogImpression your logging code
- * @param handleLogError     what to do with errors
+ * @param handleError     what to do with errors
  */
 export const withImpressionTracker = <P extends WithImpressionTrackerProps>(
   Component: React.ComponentType<P>,
@@ -181,9 +206,11 @@ export const withImpressionTracker = <P extends WithImpressionTrackerProps>(
     const {
       isEnabled,
       getInsertionId,
+      getContentId,
       logImpression,
-      handleLogError,
+      handleError,
       intersectionOptions,
+      uuid,
       visibilityTimeThreshold,
     } = args;
     let enable = isEnabled === undefined ? true : isEnabled(props);
@@ -192,10 +219,12 @@ export const withImpressionTracker = <P extends WithImpressionTrackerProps>(
     }
     const hookArgs: TrackerArguments = {
       enable,
-      insertionId: enable ? getInsertionId(props) : '',
+      insertionId: enable && getInsertionId ? getInsertionId(props) : '',
+      contentId: enable && getContentId ? getContentId(props) : '',
       logImpression,
-      handleLogError,
+      handleError,
       intersectionOptions,
+      uuid,
       visibilityTimeThreshold,
     };
     const [impressionRef, impressionId, logImpressionFunctor] = useImpressionTracker(hookArgs);
