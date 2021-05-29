@@ -43,6 +43,8 @@ When you want to undo, use `npm unlink` in `impression-tracker-react-hook/dist` 
 
 We use a GitHub action that runs semantic-release to determine how to update versions.  Just do a normal code review and this should work.  Depending on the message prefixes (e.g. `feat: `, `fix: `, `clean: `, `docs: `), it'll update the version appropriately.
 
+When doing a breaking change, add `BREAKING CHANGE:` to the PR.  The colon is important.
+
 # Resources
 
 The base of this repository is a combination of the following repos:
