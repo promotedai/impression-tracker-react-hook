@@ -2,9 +2,40 @@
 
 This library is used to track impressions using a react useImpressionTracker hook.
 
+See [unit tests](src/index.test.tsx) for a detailed example for both the React Hook and Higher Order Component (HOC).
+
+```
+import { useImpressionTracker } from 'impression-tracker-react-hook';
+import { createEventLogger } from 'promoted-snowplow-logger';
+
+export const handleError = process.env.NODE_ENV !== 'production' ? (err) => { throw err; } : console.error;
+
+export const eventLogger = createEventLogger({
+  enabled: true,
+  platformName: 'mymarket',
+  handleError,
+});
+
+const HookedExampleComponent = ({
+  // Set insertionId and/or contentId.
+  insertionId,
+  contentId,
+}: Props) => {
+  // ref needs to be set on the div to observe.
+  // impressionId can be passed directly into a logAction call.
+  // logImpressionFunctor can be called to force an impression.
+  const [ref, impressionId, logImpressionFunctor] = useImpressionTracker({
+    enable: true,
+    insertionId,
+    contentId,
+    handleError,
+    logImpression: eventLogger.logImpression,
+  });
+  return <div ref={ref}>{text}</div>;
+};
+```
+
 ## Features
-
-
 
 Uses
 - [TypeScript](https://www.typescriptlang.org/) support
