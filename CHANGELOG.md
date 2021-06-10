@@ -1,3 +1,17 @@
+# [7.0.0](https://github.com/promotedai/impression-tracker-react-hook/compare/v6.1.0...v7.0.0) (2021-06-10)
+
+
+### Bug Fixes
+
+* another PR to force the breaking change ([0070b5d](https://github.com/promotedai/impression-tracker-react-hook/commit/0070b5df3b2d06e5ba913b5f464ec06b383b8d1f))
+
+
+### BREAKING CHANGES
+
+* I think this line needs a colon in it to work correctly.
+
+TESTING=none
+
 # [6.1.0](https://github.com/promotedai/impression-tracker-react-hook/compare/v6.0.0...v6.1.0) (2021-05-29)
 
 
