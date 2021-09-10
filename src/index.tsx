@@ -88,10 +88,10 @@ export const useImpressionTracker = (args: TrackerArguments): TrackerResponse =>
 
         const _setIds = () => {
           // This React hook is designed to be used with only one Insertion.
-          if (insertionId !== undefined && insertionId !== '' && propInsertionId !== insertionId) {
+          if (insertionId && propInsertionId !== insertionId) {
             handleError(new Error(`Unexpected change in insertionId from ${propInsertionId} to ${insertionId}`));
           }
-          if (contentId !== undefined && contentId !== '' && propContentId !== contentId) {
+          if (contentId && propContentId !== contentId) {
             handleError(new Error(`Unexpected change in contentId from ${propContentId} to ${contentId}`));
           }
           setInsertionId(propInsertionId);
