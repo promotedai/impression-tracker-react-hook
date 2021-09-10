@@ -62,8 +62,8 @@ type TrackerResponse = [(node?: Element | null) => void, string, () => void];
 export const useImpressionTracker = (args: TrackerArguments): TrackerResponse => {
   const {
     enable = true,
-    insertionId = '',
-    contentId = '',
+    insertionId: propInsertionId = '',
+    contentId: propContentId = '',
     logImpression,
     handleError,
     intersectionOptions = {
@@ -73,7 +73,10 @@ export const useImpressionTracker = (args: TrackerArguments): TrackerResponse =>
     visibilityTimeThreshold = DEFAULT_VISIBILITY_TIME_THRESHOLD,
   } = args;
   if (enable) {
-    if ((insertionId === '' || insertionId === undefined) && (contentId === '' || contentId === undefined)) {
+    if (
+      (propInsertionId === '' || propInsertionId === undefined) &&
+      (propContentId === '' || propContentId === undefined)
+    ) {
       handleError(new Error('insertionId or contentId should be set'));
     } else if (typeof window !== 'undefined' && typeof window.IntersectionObserver !== 'undefined') {
       try {
@@ -85,22 +88,22 @@ export const useImpressionTracker = (args: TrackerArguments): TrackerResponse =>
 
         const _setIds = () => {
           // This React hook is designed to be used with only one Insertion.
-          if (currentInsertionId !== undefined && currentInsertionId !== '' && insertionId !== currentInsertionId) {
+          if (currentInsertionId !== undefined && currentInsertionId !== '' && propInsertionId !== currentInsertionId) {
             handleError(
               new Error(
-                `The same useImpressionTracker should not be used with multiple insertions. currentInsertionId=${currentInsertionId}, insertionId=${insertionId}, currentInsertionId=${currentInsertionId}`
+                `The same useImpressionTracker should not be used with multiple insertions. currentInsertionId=${currentInsertionId}, propInsertionId=${propInsertionId}, currentInsertionId=${currentInsertionId}`
               )
             );
           }
-          if (currentContentId !== undefined && currentContentId !== '' && contentId !== currentContentId) {
+          if (currentContentId !== undefined && currentContentId !== '' && propContentId !== currentContentId) {
             handleError(
               new Error(
-                `The same useImpressionTracker should not be used with multiple contents. currentContentId=${currentContentId}, contentId=${contentId}, currentContentId=${currentContentId}`
+                `The same useImpressionTracker should not be used with multiple contents. currentContentId=${currentContentId}, propContentId=${propContentId}, currentContentId=${currentContentId}`
               )
             );
           }
-          setInsertionId(insertionId);
-          setContentId(contentId);
+          setInsertionId(propInsertionId);
+          setContentId(propContentId);
           // When insertionId changes, change the impressionId.  This is in case
           // the client has bugs.
           const impressionId = uuid();
@@ -111,7 +114,7 @@ export const useImpressionTracker = (args: TrackerArguments): TrackerResponse =>
         // Generate a new UUID on mount.
         useEffect(() => {
           _setIds();
-        }, [insertionId, contentId]);
+        }, [propInsertionId, propContentId]);
 
         const logImpressionFunctor = () => {
           if (!logged) {
@@ -124,11 +127,11 @@ export const useImpressionTracker = (args: TrackerArguments): TrackerResponse =>
             const impression: Impression = {
               impressionId,
             };
-            if (insertionId) {
-              impression.insertionId = insertionId;
+            if (propInsertionId) {
+              impression.insertionId = propInsertionId;
             }
-            if (contentId) {
-              impression.contentId = contentId;
+            if (propContentId) {
+              impression.contentId = propContentId;
             }
             logImpression(impression);
           }
