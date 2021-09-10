@@ -114,12 +114,12 @@ export const useImpressionTracker = (args: TrackerArguments): TrackerResponse =>
           if (!logged) {
             setLogged(true);
             // In case there is a weird corner case where impressionId has not been set.
-            let latestImpressionId = impressionIdRef.current;
-            if (latestImpressionId === '') {
-              latestImpressionId = _setIds();
+            let currentImpressionId = impressionIdRef.current;
+            if (currentImpressionId === '') {
+              currentImpressionId = _setIds();
             }
             const impression: Impression = {
-              impressionId: latestImpressionId,
+              impressionId: currentImpressionId,
             };
             if (insertionIdRef.current) {
               impression.insertionId = insertionIdRef.current;
