@@ -83,7 +83,7 @@ export const useImpressionTracker = (args: TrackerArguments): TrackerResponse =>
         const [ref, inView] = useInView(intersectionOptions);
         const [insertionId, setInsertionId] = useStateRef('');
         const [contentId, setContentId] = useStateRef('');
-        const [impressionId, setImpressionId] = useStateRef('');
+        const [, setImpressionId, impressionIdRef] = useStateRef('');
         const [logged, setLogged] = useState(false);
 
         const _setIds = () => {
@@ -112,7 +112,7 @@ export const useImpressionTracker = (args: TrackerArguments): TrackerResponse =>
           if (!logged) {
             setLogged(true);
             // In case there is a weird corner case where impressionId has not been set.
-            let latestImpressionId = impressionId;
+            let latestImpressionId = impressionIdRef.current;
             if (latestImpressionId === '') {
               latestImpressionId = _setIds();
             }
@@ -143,7 +143,7 @@ export const useImpressionTracker = (args: TrackerArguments): TrackerResponse =>
           [ref.current, inView]
         );
 
-        return [ref, impressionId, logImpressionFunctor];
+        return [ref, impressionIdRef.current, logImpressionFunctor];
       } catch (error) {
         handleError(error);
       }
