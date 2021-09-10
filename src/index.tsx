@@ -87,20 +87,16 @@ export const useImpressionTracker = (args: TrackerArguments): TrackerResponse =>
         const [logged, setLogged] = useState(false);
 
         const _setIds = () => {
-          // This React hook is designed to be used with only one Insertion.
-          if (insertionIdRef.current && propInsertionId !== insertionIdRef.current) {
-            handleError(
-              new Error(`Unexpected insertionId change from ${insertionIdRef.current} to ${propInsertionId}`)
-            );
-          }
           if (contentIdRef.current && propContentId !== contentIdRef.current) {
             handleError(new Error(`Unexpected contentId change from ${contentIdRef.current} to ${propContentId}`));
           }
+          let impressionId = impressionIdRef.current;
+          // If the insertionId changes, regenerate the impressionId.
+          if (!impressionId || insertionIdRef.current != propInsertionId) {
+            impressionId = uuid();
+          }
           setInsertionId(propInsertionId);
           setContentId(propContentId);
-          // When insertionId changes, change the impressionId.  This is in case
-          // the client has bugs.
-          const impressionId = uuid();
           setImpressionId(impressionId);
           return impressionId;
         };
