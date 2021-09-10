@@ -81,15 +81,17 @@ export const useImpressionTracker = (args: TrackerArguments): TrackerResponse =>
     } else if (typeof window !== 'undefined' && typeof window.IntersectionObserver !== 'undefined') {
       try {
         const [ref, inView] = useInView(intersectionOptions);
-        const [insertionId, setInsertionId] = useStateRef('');
+        const [, setInsertionId, insertionIdRef] = useStateRef('');
         const [contentId, setContentId] = useStateRef('');
         const [, setImpressionId, impressionIdRef] = useStateRef('');
         const [logged, setLogged] = useState(false);
 
         const _setIds = () => {
           // This React hook is designed to be used with only one Insertion.
-          if (insertionId && propInsertionId !== insertionId) {
-            handleError(new Error(`Unexpected insertionId change from ${insertionId} to ${propInsertionId}`));
+          if (insertionIdRef.current && propInsertionId !== insertionIdRef.current) {
+            handleError(
+              new Error(`Unexpected insertionId change from ${insertionIdRef.current} to ${propInsertionId}`)
+            );
           }
           if (contentId && propContentId !== contentId) {
             handleError(new Error(`Unexpected contentId change from ${contentId} to ${propContentId}`));
@@ -119,8 +121,8 @@ export const useImpressionTracker = (args: TrackerArguments): TrackerResponse =>
             const impression: Impression = {
               impressionId: latestImpressionId,
             };
-            if (propInsertionId) {
-              impression.insertionId = propInsertionId;
+            if (insertionIdRef.current) {
+              impression.insertionId = insertionIdRef.current;
             }
             if (propContentId) {
               impression.contentId = propContentId;
