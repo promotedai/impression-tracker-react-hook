@@ -78,9 +78,9 @@ export const useImpressionTracker = (args: TrackerArguments): TrackerResponse =>
     } else if (typeof window !== 'undefined' && typeof window.IntersectionObserver !== 'undefined') {
       try {
         const [ref, inView] = useInView(intersectionOptions);
-        const [currentInsertionId, setInsertionId] = useState('');
-        const [currentContentId, setContentId] = useState('');
-        const [currentImpressionId, setImpressionId] = useState('');
+        const [currentInsertionId, setInsertionId] = useStateRef('');
+        const [currentContentId, setContentId] = useStateRef('');
+        const [currentImpressionId, setImpressionId] = useStateRef('');
         const [logged, setLogged] = useState(false);
 
         const _setIds = () => {
@@ -164,7 +164,6 @@ export const useImpressionTracker = (args: TrackerArguments): TrackerResponse =>
     },
   ];
 };
-
 export interface HocTrackerArguments<P extends WithImpressionTrackerProps> {
   /* A quick way to disable the hook. Defaults to true. */
   isEnabled?: (props: Subtract<P, WithImpressionTrackerProps>) => boolean;
@@ -240,3 +239,23 @@ export const withImpressionTracker = <P extends WithImpressionTrackerProps>(
   fn.displayName = 'WithImpressionTracker';
   return fn;
 };
+
+type CurrentRef<T> = {
+  current: T;
+};
+
+type StateRefResponse<T> = [T, (value: T) => void, CurrentRef<T>];
+
+// Forked from https://github.com/Aminadav/react-useStateRef/blob/master/index.js
+function useStateRef<T>(defaultValue: T): StateRefResponse<T> {
+  const [state, setState] = React.useState(defaultValue);
+  const ref = React.useRef(state);
+
+  const dispatch = React.useCallback(function (val) {
+    ref.current = typeof val === 'function' ? val(ref.current) : val;
+
+    setState(ref.current);
+  }, []);
+
+  return [state, dispatch, ref];
+}
