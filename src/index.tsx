@@ -82,7 +82,7 @@ export const useImpressionTracker = (args: TrackerArguments): TrackerResponse =>
       try {
         const [ref, inView] = useInView(intersectionOptions);
         const [, setInsertionId, insertionIdRef] = useStateRef('');
-        const [contentId, setContentId] = useStateRef('');
+        const [, setContentId, contentIdRef] = useStateRef('');
         const [, setImpressionId, impressionIdRef] = useStateRef('');
         const [logged, setLogged] = useState(false);
 
@@ -93,8 +93,8 @@ export const useImpressionTracker = (args: TrackerArguments): TrackerResponse =>
               new Error(`Unexpected insertionId change from ${insertionIdRef.current} to ${propInsertionId}`)
             );
           }
-          if (contentId && propContentId !== contentId) {
-            handleError(new Error(`Unexpected contentId change from ${contentId} to ${propContentId}`));
+          if (contentIdRef.current && propContentId !== contentIdRef.current) {
+            handleError(new Error(`Unexpected contentId change from ${contentIdRef.current} to ${propContentId}`));
           }
           setInsertionId(propInsertionId);
           setContentId(propContentId);
@@ -124,8 +124,8 @@ export const useImpressionTracker = (args: TrackerArguments): TrackerResponse =>
             if (insertionIdRef.current) {
               impression.insertionId = insertionIdRef.current;
             }
-            if (propContentId) {
-              impression.contentId = propContentId;
+            if (contentIdRef.current) {
+              impression.contentId = contentIdRef.current;
             }
             logImpression(impression);
           }
