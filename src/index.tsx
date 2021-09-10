@@ -81,26 +81,18 @@ export const useImpressionTracker = (args: TrackerArguments): TrackerResponse =>
     } else if (typeof window !== 'undefined' && typeof window.IntersectionObserver !== 'undefined') {
       try {
         const [ref, inView] = useInView(intersectionOptions);
-        const [currentInsertionId, setInsertionId] = useStateRef('');
-        const [currentContentId, setContentId] = useStateRef('');
-        const [currentImpressionId, setImpressionId] = useStateRef('');
+        const [insertionId, setInsertionId] = useStateRef('');
+        const [contentId, setContentId] = useStateRef('');
+        const [impressionId, setImpressionId] = useStateRef('');
         const [logged, setLogged] = useState(false);
 
         const _setIds = () => {
           // This React hook is designed to be used with only one Insertion.
-          if (currentInsertionId !== undefined && currentInsertionId !== '' && propInsertionId !== currentInsertionId) {
-            handleError(
-              new Error(
-                `The same useImpressionTracker should not be used with multiple insertions. currentInsertionId=${currentInsertionId}, propInsertionId=${propInsertionId}, currentInsertionId=${currentInsertionId}`
-              )
-            );
+          if (insertionId !== undefined && insertionId !== '' && propInsertionId !== insertionId) {
+            handleError(new Error(`Unexpected change in insertionId from ${propInsertionId} to ${insertionId}`));
           }
-          if (currentContentId !== undefined && currentContentId !== '' && propContentId !== currentContentId) {
-            handleError(
-              new Error(
-                `The same useImpressionTracker should not be used with multiple contents. currentContentId=${currentContentId}, propContentId=${propContentId}, currentContentId=${currentContentId}`
-              )
-            );
+          if (contentId !== undefined && contentId !== '' && propContentId !== contentId) {
+            handleError(new Error(`Unexpected change in contentId from ${propContentId} to ${contentId}`));
           }
           setInsertionId(propInsertionId);
           setContentId(propContentId);
@@ -120,12 +112,12 @@ export const useImpressionTracker = (args: TrackerArguments): TrackerResponse =>
           if (!logged) {
             setLogged(true);
             // In case there is a weird corner case where impressionId has not been set.
-            let impressionId = currentImpressionId;
-            if (impressionId === '') {
-              impressionId = _setIds();
+            let latestImpressionId = impressionId;
+            if (latestImpressionId === '') {
+              latestImpressionId = _setIds();
             }
             const impression: Impression = {
-              impressionId,
+              impressionId: latestImpressionId,
             };
             if (propInsertionId) {
               impression.insertionId = propInsertionId;
@@ -151,7 +143,7 @@ export const useImpressionTracker = (args: TrackerArguments): TrackerResponse =>
           [ref.current, inView]
         );
 
-        return [ref, currentImpressionId, logImpressionFunctor];
+        return [ref, impressionId, logImpressionFunctor];
       } catch (error) {
         handleError(error);
       }
