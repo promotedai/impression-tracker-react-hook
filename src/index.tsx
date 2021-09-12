@@ -90,7 +90,7 @@ export const useImpressionTracker = (args: TrackerArguments): TrackerResponse =>
   const [, setImpressionId, impressionIdRef] = useStateRef('');
   const [ref, inView] = useInView({
     ...intersectionOptions,
-    skip: !enable,
+    skip: !active,
   });
 
   // TODO - figure out if prop changes can cause the setup to break.
