@@ -1,10 +1,10 @@
-import copy from 'rollup-plugin-copy';
 import { nodeResolve } from '@rollup/plugin-node-resolve';
+import copy from 'rollup-plugin-copy';
+import del from 'rollup-plugin-delete';
 import external from 'rollup-plugin-peer-deps-external';
+import generatePackageJson from 'rollup-plugin-generate-package-json';
 import { terser } from 'rollup-plugin-terser';
 import typescript from 'rollup-plugin-typescript2';
-import del from 'rollup-plugin-delete';
-import generatePackageJson from 'rollup-plugin-generate-package-json';
 import pkg from './package.json';
 
 const peerDependencies = pkg.peerDependencies;
