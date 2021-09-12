@@ -2,9 +2,6 @@
   "name": "impression-tracker-react-hook",
   "version": "3.0.0",
   "description": "Tracks impressions in React using a Hook",
-  "main": "dist/index.cjs.ts",
-  "module": "dist/index.esm.ts",
-  "source": "src/index.tsx",
   "scripts": {
     "prettier": "prettier '**/*.{js,ts}' --ignore-path ./.prettierignore",
     "types": "tsc --noEmit",
@@ -82,7 +79,6 @@
     "intersection-observer": "^0.12.0",
     "jest": "^26.0.1",
     "lint-staged": "^10.5.3",
-    "npm-run-all": "^4.1.5",
     "prettier": "^2.0.5",
     "react": "^17.0.0",
     "react-dom": "^17.0.0",
