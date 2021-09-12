@@ -231,6 +231,45 @@ describe('useImpressionTracker', () => {
     expect(logImpression.mock.calls).toEqual([[impression1]]);
   });
 
+  it('changing contentId should throw', () => {
+    const logImpression = jest.fn();
+    const { rerender } = render(
+      <HookedExampleComponent
+        text="component works"
+        contentId="abc"
+        insertionId="uuid9"
+        logImpression={logImpression}
+      />
+    );
+
+    expect(() => {
+      rerender(
+        <HookedExampleComponent
+          text="component works"
+          contentId="diff"
+          insertionId="uuid9"
+          logImpression={logImpression}
+        />
+      );
+    }).toThrow();
+  });
+
+  it('changing insertionId should not throw', () => {
+    const logImpression = jest.fn();
+    const { rerender } = render(
+      <HookedExampleComponent
+        text="component works"
+        contentId="abc"
+        insertionId="uuid9"
+        logImpression={logImpression}
+      />
+    );
+
+    rerender(
+      <HookedExampleComponent text="component works" contentId="abc" insertionId="diff" logImpression={logImpression} />
+    );
+  });
+
   it('no IDs - throw', () => {
     const logImpression = jest.fn();
     expect(() => render(<HookedExampleComponent text="component works" logImpression={logImpression} />));
