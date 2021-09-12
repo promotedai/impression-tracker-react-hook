@@ -72,91 +72,91 @@ export const useImpressionTracker = (args: TrackerArguments): TrackerResponse =>
     uuid = uuidv4,
     visibilityTimeThreshold = DEFAULT_VISIBILITY_TIME_THRESHOLD,
   } = args;
-  if (enable) {
-    if (
-      (propInsertionId === '' || propInsertionId === undefined) &&
-      (propContentId === '' || propContentId === undefined)
-    ) {
-      handleError(new Error('insertionId or contentId should be set'));
-    } else if (typeof window !== 'undefined' && typeof window.IntersectionObserver !== 'undefined') {
-      try {
-        const [ref, inView] = useInView(intersectionOptions);
-        const [, setInsertionId, insertionIdRef] = useStateRef('');
-        const [, setContentId, contentIdRef] = useStateRef('');
-        const [, setImpressionId, impressionIdRef] = useStateRef('');
-        const [logged, setLogged] = useState(false);
 
-        const _setIds = () => {
-          if (contentIdRef.current && propContentId !== contentIdRef.current) {
-            handleError(new Error(`Unexpected contentId change from ${contentIdRef.current} to ${propContentId}`));
-          }
-          let impressionId = impressionIdRef.current;
-          // If the insertionId changes, regenerate the impressionId.
-          if (!impressionId || insertionIdRef.current != propInsertionId) {
-            impressionId = uuid();
-          }
-          setInsertionId(propInsertionId);
-          setContentId(propContentId);
-          setImpressionId(impressionId);
-          return impressionId;
-        };
-
-        // Generate a new UUID on mount.
-        useEffect(() => {
-          _setIds();
-        }, [propInsertionId, propContentId]);
-
-        const logImpressionFunctor = () => {
-          if (!logged) {
-            setLogged(true);
-            // In case there is a weird corner case where impressionId has not been set.
-            let currentImpressionId = impressionIdRef.current;
-            if (currentImpressionId === '') {
-              currentImpressionId = _setIds();
-            }
-            const impression: Impression = {
-              impressionId: currentImpressionId,
-            };
-            if (insertionIdRef.current) {
-              impression.insertionId = insertionIdRef.current;
-            }
-            if (contentIdRef.current) {
-              impression.contentId = contentIdRef.current;
-            }
-            logImpression(impression);
-          }
-        };
-
-        useEffect(
-          () => {
-            if (!inView || logged) {
-              return;
-            }
-            const timer = setTimeout(logImpressionFunctor, visibilityTimeThreshold);
-            return () => clearTimeout(timer);
-          },
-          // TODO - should ref.current be in this?
-          // The Typescript interface for the useInView hook is limited.
-          // @ts-expect-error ref.current is not in the type.
-          [ref.current, inView]
-        );
-
-        return [ref, impressionIdRef.current, logImpressionFunctor];
-      } catch (error) {
-        handleError(error);
-      }
-    }
+  // active combines enabled and valid params.
+  let active = enable;
+  if (active && !propInsertionId && !propContentId) {
+    handleError(new Error('insertionId or contentId should be set'));
+    active = false;
   }
-  return [
+  // If IntersectionObserver is not present, mark as not active.
+  if (active && !(typeof window !== 'undefined' && typeof (window as any).IntersectionObserver !== 'undefined')) {
+    active = false;
+  }
+
+  const [logged, setLogged] = useState(false);
+  const [, setInsertionId, insertionIdRef] = useStateRef('');
+  const [, setContentId, contentIdRef] = useStateRef('');
+  const [, setImpressionId, impressionIdRef] = useStateRef('');
+  const [ref, inView] = useInView({
+    ...intersectionOptions,
+    skip: !enable,
+  });
+
+  // TODO - figure out if prop changes can cause the setup to break.
+
+  const setIds = () => {
+    if (!active) {
+      return '';
+    }
+    if (contentIdRef.current && propContentId !== contentIdRef.current) {
+      handleError(new Error(`Unexpected contentId change from ${contentIdRef.current} to ${propContentId}`));
+    }
+    let impressionId = impressionIdRef.current;
+    // If the insertionId changes, regenerate the impressionId.
+    if (!impressionId || insertionIdRef.current != propInsertionId) {
+      impressionId = uuid();
+    }
+    setInsertionId(propInsertionId);
+    setContentId(propContentId);
+    setImpressionId(impressionId);
+    return impressionId;
+  };
+
+  const logImpressionFunctor = () => {
+    if (!active || logged) {
+      return;
+    }
+    setLogged(true);
+    // In case there is a weird corner case where impressionId has not been set.
+    let currentImpressionId = impressionIdRef.current;
+    if (currentImpressionId === '') {
+      currentImpressionId = setIds();
+    }
+    const impression: Impression = {
+      impressionId: currentImpressionId,
+    };
+    if (insertionIdRef.current) {
+      impression.insertionId = insertionIdRef.current;
+    }
+    if (contentIdRef.current) {
+      impression.contentId = contentIdRef.current;
+    }
+    logImpression(impression);
+  };
+
+  // Generate a new UUID on mount.
+  useEffect(() => {
+    setIds();
+  }, [propInsertionId, propContentId]);
+
+  useEffect(
     () => {
-      /* do nothing */
+      if (active && !logged && inView) {
+        const timer = setTimeout(logImpressionFunctor, visibilityTimeThreshold);
+        return () => clearTimeout(timer);
+      } else {
+        return;
+      }
     },
-    '',
-    () => {
-      /* do nothing */
-    },
-  ];
+    // TODO - should ref.current be in this?
+    // The Typescript interface for the useInView hook is limited.
+    [(ref as any).current, inView]
+  );
+
+  return [ref, impressionIdRef.current, logImpressionFunctor];
 };
+
 export interface HocTrackerArguments<P extends WithImpressionTrackerProps> {
   /* A quick way to disable the hook. Defaults to true. */
   isEnabled?: (props: Subtract<P, WithImpressionTrackerProps>) => boolean;
