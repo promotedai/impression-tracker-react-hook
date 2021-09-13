@@ -8,6 +8,7 @@
     "build": "npm run build:clean && npm run build:lib",
     "build:clean": "rimraf dist",
     "build:lib": "rollup -c",
+    "build:watch": "rollup -c -w",
     "updateLink": "npm run build:clean && npm run build && cd dist && npm link",
     "lint": "eslint './{src,app}/**/*.{ts,tsx}'",
     "test": "jest --coverage",
@@ -51,11 +52,9 @@
     ]
   },
   "devDependencies": {
-    "@babel/core": "^7.12.10",
-    "@babel/preset-env": "^7.12.11",
-    "@babel/preset-typescript": "^7.12.7",
     "@commitlint/cli": "^11.0.0",
     "@commitlint/config-conventional": "^11.0.0",
+    "@rollup/plugin-node-resolve": "^13.0.4",
     "@semantic-release/changelog": "^5.0.1",
     "@semantic-release/commit-analyzer": "^8.0.1",
     "@semantic-release/git": "^9.0.0",
@@ -80,16 +79,14 @@
     "intersection-observer": "^0.12.0",
     "jest": "^26.0.1",
     "lint-staged": "^10.5.3",
-    "postcss": "^8.2.2",
     "prettier": "^2.0.5",
-    "react": "^17.0.1",
-    "react-dom": "^17.0.1",
-    "react-intersection-observer": "^8.31.0",
-    "rollup": "^2.16.1",
+    "react": "^17.0.0",
+    "react-dom": "^17.0.0",
+    "rollup": "^2.56.3",
     "rollup-plugin-copy": "^3.3.0",
     "rollup-plugin-delete": "^2.0.0",
     "rollup-plugin-generate-package-json": "^3.2.0",
-    "rollup-plugin-postcss": "^4.0.0",
+    "rollup-plugin-peer-deps-external": "^2.2.4",
     "rollup-plugin-terser": "^7.0.2",
     "rollup-plugin-typescript2": "^0.29.0",
     "semantic-release": "^17.3.1",
@@ -101,16 +98,11 @@
   },
   "dependencies": {
     "intersection-observer": "^0.12.0",
-    "react-intersection-observer": "^8.0.0",
-    "uuid": "^8.0.0"
+    "react-intersection-observer": "^8.0.0"
   },
-  "config": {
-    "lib": {
-      "peerDependencies": {
-        "react": "^17.0.1",
-        "react-dom": "^17.0.1",
-        "typescript": "^4.1.3"
-      }
-    }
+  "peerDependencies": {
+    "react": "^16.8.0 || ^17.0.0",
+    "react-dom": "^16.8.0 || ^17.0.0",
+    "uuid": "^8.0.0"
   }
 }
