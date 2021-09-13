@@ -5,7 +5,6 @@ import 'intersection-observer';
 import { IntersectionOptions, useInView } from 'react-intersection-observer';
 
 // TODO - switch to dynamic import approach.
-
 // TODO - support polyfill.
 // https://www.npmjs.com/package/react-intersection-observer#polyfill
 
