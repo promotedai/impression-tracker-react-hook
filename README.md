@@ -59,17 +59,9 @@ Uses
 
 ## When developing locally
 
-**Broken** - This fails with a `Error: Cannot find module 'react'` when using with NextJS.
+**Broken** - We previously had an `npm run updateLink` command to use npm link for local development.  This fails with a `Error: Cannot find module 'react'`.
 
-If you want to test local changes in an actual deployment, use `npm link`.
-
-1. Run `npm run updateLink`.
-4. Go to client directory and run `npm link impression-tracker-react-hook`.
-
-When you update `impression-tracker-react-hook`, run `npm run updateLink`.
-
-When you want to undo, use `npm unlink` in `impression-tracker-react-hook/dist` and `npm unlink impression-tracker-react-hook` in the client directory.
-
+For now, just copy/paste the impression tracker code into the client code and test it out.
 ## Deploy
 
 We use a GitHub action that runs semantic-release to determine how to update versions.  Just do a normal code review and this should work.  Depending on the message prefixes (e.g. `feat: `, `fix: `, `clean: `, `docs: `), it'll update the version appropriately.
