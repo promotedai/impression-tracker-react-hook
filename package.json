@@ -98,7 +98,7 @@
   },
   "dependencies": {
     "intersection-observer": "^0.12.0",
-    "react-intersection-observer": "^8.0.0"
+    "react-intersection-observer": "^9.0.0"
   },
   "peerDependencies": {
     "react": "^16.8.0 || ^17.0.0",
