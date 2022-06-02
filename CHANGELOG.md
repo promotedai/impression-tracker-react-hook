@@ -1,3 +1,10 @@
+# [7.1.0](https://github.com/promotedai/impression-tracker-react-hook/compare/v7.0.1...v7.1.0) (2022-06-02)
+
+
+### Features
+
+* add fields to Impression type ([#52](https://github.com/promotedai/impression-tracker-react-hook/issues/52)) ([3faafe4](https://github.com/promotedai/impression-tracker-react-hook/commit/3faafe4bad905de7cc9a771341e1dbbb65ad58a6))
+
 ## [7.0.1](https://github.com/promotedai/impression-tracker-react-hook/compare/v7.0.0...v7.0.1) (2021-09-13)
 
 
