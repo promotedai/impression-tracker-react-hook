@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import 'intersection-observer';
 import { IntersectionOptions, useInView } from 'react-intersection-observer';
+import { useStateRef } from './useStateRef';
 
 // TODO - switch to dynamic import approach.
 // TODO - support polyfill.
@@ -239,23 +240,3 @@ export const withImpressionTracker = <P extends WithImpressionTrackerProps>(
   fn.displayName = 'WithImpressionTracker';
   return fn;
 };
-
-type CurrentRef<T> = {
-  current: T;
-};
-
-type StateRefResponse<T> = [T, (value: T) => void, CurrentRef<T>];
-
-// Forked from https://github.com/Aminadav/react-useStateRef/blob/master/index.js
-function useStateRef<T>(defaultValue: T): StateRefResponse<T> {
-  const [state, setState] = React.useState(defaultValue);
-  const ref = React.useRef(state);
-
-  const dispatch = React.useCallback(function (val: any) {
-    ref.current = typeof val === 'function' ? val(ref.current) : val;
-
-    setState(ref.current);
-  }, []);
-
-  return [state, dispatch, ref];
-}
