@@ -14,9 +14,17 @@ const DEFAULT_VISIBILITY_RATIO_THRESHOLD = 0.5;
 const DEFAULT_VISIBILITY_TIME_THRESHOLD = 1000;
 
 export interface Impression {
+  userInfo?: {
+    logUserId?: string;
+    userId?: string;
+    isInternalUser?: boolean;
+  };
   insertionId?: string;
   contentId?: string;
   impressionId: string;
+  properties?: {
+    struct: any;
+  };
 }
 
 interface TrackerArguments {
@@ -243,7 +251,7 @@ function useStateRef<T>(defaultValue: T): StateRefResponse<T> {
   const [state, setState] = React.useState(defaultValue);
   const ref = React.useRef(state);
 
-  const dispatch = React.useCallback(function (val) {
+  const dispatch = React.useCallback(function (val: any) {
     ref.current = typeof val === 'function' ? val(ref.current) : val;
 
     setState(ref.current);
