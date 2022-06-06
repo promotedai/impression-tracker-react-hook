@@ -181,8 +181,11 @@ export interface HocTrackerArguments<P extends WithImpressionTrackerProps> {
   getInsertionId?: (props: Subtract<P, WithImpressionTrackerProps>) => string;
   /* Get the content ID from the props. defaults to empty string. */
   getContentId?: (props: Subtract<P, WithImpressionTrackerProps>) => string;
-  /* Called when we should log an impression. */
-  logImpression: (impression: Impression) => void;
+  /* The method for logging an impression event.  Usually this calls `promoted-snowplow-logger`.
+     This is called between this library identifying an impression and when the API is called.
+     Clients can modify impressions in this call.  An optional props is returned so
+     the impression record can be modified using props. */
+  logImpression: (impression: Impression, props?: Subtract<P, WithImpressionTrackerProps>) => void;
   /* Called when an error occurs. */
   handleError: (err: Error) => void;
   /* To override the visibility threshold. Defaults to 50% visible. */
@@ -216,7 +219,7 @@ export const withImpressionTracker = <P extends WithImpressionTrackerProps>(
       isEnabled,
       getInsertionId,
       getContentId,
-      logImpression,
+      logImpression: logImpressionWithProps,
       handleError,
       intersectionOptions,
       uuid,
@@ -230,7 +233,7 @@ export const withImpressionTracker = <P extends WithImpressionTrackerProps>(
       enable,
       insertionId: enable && getInsertionId ? getInsertionId(props) : '',
       contentId: enable && getContentId ? getContentId(props) : '',
-      logImpression,
+      logImpression: (impression) => logImpressionWithProps(impression, props),
       handleError,
       intersectionOptions,
       uuid,
