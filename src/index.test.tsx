@@ -320,14 +320,14 @@ describe('useImpressionTracker', () => {
       mockAllIsIntersecting(true);
       expect(logImpression.mock.calls).toEqual([]);
       runAllTimers();
-      expect(logImpression.mock.calls).toEqual([
-        [
-          {
-            impressionId: 'uuid0',
-            insertionId: 'uuid9',
-          },
-        ],
-      ]);
+      expect(logImpression.mock.calls.length).toEqual(1);
+      expect(logImpression.mock.calls[0].length).toEqual(2);
+      expect(logImpression.mock.calls[0][0]).toEqual({
+        impressionId: 'uuid0',
+        insertionId: 'uuid9',
+      });
+      // This is the props.
+      expect(logImpression.mock.calls[0][1].text).toEqual('component works');
     });
 
     it('contentId', () => {
@@ -346,14 +346,14 @@ describe('useImpressionTracker', () => {
       mockAllIsIntersecting(true);
       expect(logImpression.mock.calls).toEqual([]);
       runAllTimers();
-      expect(logImpression.mock.calls).toEqual([
-        [
-          {
-            impressionId: 'uuid0',
-            contentId: 'abc',
-          },
-        ],
-      ]);
+      expect(logImpression.mock.calls.length).toEqual(1);
+      expect(logImpression.mock.calls[0].length).toEqual(2);
+      expect(logImpression.mock.calls[0][0]).toEqual({
+        impressionId: 'uuid0',
+        contentId: 'abc',
+      });
+      // This is the props.
+      expect(logImpression.mock.calls[0][1].text).toEqual('component works');
     });
 
     it('disabled', () => {
