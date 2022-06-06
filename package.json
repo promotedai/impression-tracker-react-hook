@@ -1,6 +1,6 @@
 {
   "name": "impression-tracker-react-hook",
-  "version": "7.3.0",
+  "version": "7.4.0",
   "description": "Tracks impressions in React using a Hook",
   "scripts": {
     "prettier": "prettier '**/*.{js,ts}' --ignore-path ./.prettierignore",

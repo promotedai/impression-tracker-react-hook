@@ -14,6 +14,14 @@ import { useStateRef } from './useStateRef';
 const DEFAULT_VISIBILITY_RATIO_THRESHOLD = 0.5;
 const DEFAULT_VISIBILITY_TIME_THRESHOLD = 1000;
 
+export interface ImpressionSourceTypeMap {
+  UNKNOWN_IMPRESSION_SOURCE_TYPE: 0;
+  DELIVERY: 1;
+  CLIENT_BACKEND: 2;
+}
+
+export type ImpressionSourceTypeString = 'UNKNOWN_IMPRESSION_SOURCE_TYPE' | 'DELIVERY' | 'CLIENT_BACKEND';
+
 export interface Impression {
   userInfo?: {
     logUserId?: string;
@@ -23,6 +31,7 @@ export interface Impression {
   insertionId?: string;
   contentId?: string;
   impressionId: string;
+  sourceType?: ImpressionSourceTypeMap[keyof ImpressionSourceTypeMap] | ImpressionSourceTypeString;
   properties?: {
     struct: any;
   };
