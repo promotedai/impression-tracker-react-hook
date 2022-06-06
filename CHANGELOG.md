@@ -1,3 +1,10 @@
+# [7.5.0](https://github.com/promotedai/impression-tracker-react-hook/compare/v7.4.0...v7.5.0) (2022-06-06)
+
+
+### Features
+
+* support accessing props in hoc ([#56](https://github.com/promotedai/impression-tracker-react-hook/issues/56)) ([fccfc98](https://github.com/promotedai/impression-tracker-react-hook/commit/fccfc98a167cc2becf524247fe413379c5a18543))
+
 # [7.4.0](https://github.com/promotedai/impression-tracker-react-hook/compare/v7.3.0...v7.4.0) (2022-06-06)
 
 
