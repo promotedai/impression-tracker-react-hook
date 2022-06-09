@@ -4,7 +4,9 @@ This library is used to track impressions using a react useImpressionTracker hoo
 
 See [unit tests](src/index.test.tsx) for a detailed example for both the React Hook and Higher Order Component (HOC).
 
-```
+## Hook
+
+```typescript
 import { useImpressionTracker } from 'impression-tracker-react-hook';
 import { createEventLogger } from 'promoted-snowplow-logger';
 
@@ -33,6 +35,53 @@ const HookedExampleComponent = ({
   });
   return <div ref={ref}>{text}</div>;
 };
+```
+
+## Higher-Order Components (HOC)
+
+```typescript
+interface Props {
+  ...
+  // TODO - set this ref on the div.
+  impressionRef: (node?: Element | null) => void;
+  // Optional props.
+  impressionId: string;
+  // In case you want to log an impression early.
+  logImpressionFunctor: () => void;
+}
+
+class ExampleComponent extends React.Component<Props> {
+  ...
+  render() {
+    ...
+    return <div ref={this.props.impressionRef}>{text}</div>;
+  }
+}
+
+const WrappedExampleComponent = withImpressionTracker(ExampleComponent, {
+  handleError,
+  isEnabled: () => impressionLoggingEnabled,
+  getContentId: props => props.contentId,
+  getInsertionId: props => props.insertionId,
+  // Can be changed to modify the impression.
+  logImpression: eventLogger.logImpression,
+});
+```
+
+### Using Compose
+
+```typescript
+const WrappedExampleComponent = compose(
+  ...,
+  composableImpressionTracker({
+    handleError,
+    isEnabled: () => impressionLoggingEnabled,
+    getContentId: props => props.contentId,
+    getInsertionId: props => props.insertionId,
+    // Can be changed to modify the impression.
+    logImpression: eventLogger.logImpression,
+  })
+)(ExampleComponent);
 ```
 
 ## Features

@@ -205,10 +205,9 @@ export interface WithImpressionTrackerProps {
 /**
  * An HOC version of useImpressionProps.  If you can, use the hook instead.
  *
- * @param Component          the Component to wrap
- * @param getInsertionId     gets the insertionId from the props
- * @param innerLogImpression your logging code
- * @param handleError     what to do with errors
+ * @param Component the Component to wrap
+ * @param args      gets the insertionId from the props
+ * @returns a wrapped Component that supports impression tracking
  */
 export const withImpressionTracker = <P extends WithImpressionTrackerProps>(
   Component: React.ComponentType<P>,
@@ -225,10 +224,7 @@ export const withImpressionTracker = <P extends WithImpressionTrackerProps>(
       uuid,
       visibilityTimeThreshold,
     } = args;
-    let enable = isEnabled === undefined ? true : isEnabled(props);
-    if (enable == undefined) {
-      enable = true;
-    }
+    const enable = (isEnabled !== undefined ? isEnabled(props) : true) ?? true;
     const hookArgs: TrackerArguments = {
       enable,
       insertionId: enable && getInsertionId ? getInsertionId(props) : '',
@@ -251,4 +247,16 @@ export const withImpressionTracker = <P extends WithImpressionTrackerProps>(
   };
   fn.displayName = 'WithImpressionTracker';
   return fn;
+};
+
+/**
+ * An HOC version of useImpressionProps that works with `compose`.  If you can, use the hook instead.
+ *
+ * @param args      gets the insertionId from the props
+ * @returns a `Function<Component, Component>` that works with `compose`
+ */
+export const composableImpressionTracker = <P extends WithImpressionTrackerProps>(
+  args: HocTrackerArguments<P>
+): ((Component: React.ComponentType<P>) => React.FC<Subtract<P, WithImpressionTrackerProps>>) => {
+  return (Component: React.ComponentType<P>) => withImpressionTracker(Component, args);
 };
