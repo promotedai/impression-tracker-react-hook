@@ -249,8 +249,6 @@ export const withImpressionTracker = <P extends WithImpressionTrackerProps>(
   return fn;
 };
 
-// A version of HOC that can be used with connect.
-
 /**
  * An HOC version of useImpressionProps that works with `compose`.  If you can, use the hook instead.
  *
