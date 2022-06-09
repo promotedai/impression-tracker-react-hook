@@ -1,6 +1,12 @@
 import React from 'react';
 import { render } from '@testing-library/react';
-import { Impression, WithImpressionTrackerProps, useImpressionTracker, withImpressionTracker } from '.';
+import {
+  Impression,
+  WithImpressionTrackerProps,
+  useImpressionTracker,
+  withImpressionTracker,
+  composableImpressionTracker,
+} from '.';
 import 'intersection-observer';
 import { mockAllIsIntersecting } from 'react-intersection-observer/test-utils';
 import { act } from 'react-dom/test-utils';
@@ -412,6 +418,39 @@ describe('useImpressionTracker', () => {
       expect(logImpression.mock.calls).toEqual([]);
       runAllTimers();
       expect(logImpression.mock.calls).toEqual([]);
+    });
+  });
+
+  describe('composeableImpressionTracker', () => {
+    // We don't want to pull in a full version of compose since that's a large dev dependency to take.
+    const compose = (fn: any) => fn;
+
+    it('test', () => {
+      const logImpression = jest.fn();
+      const InsertionIdTrackedExampleComponent = compose(
+        composableImpressionTracker({
+          logImpression,
+          handleError: (err: Error) => {
+            throw err;
+          },
+          getInsertionId: () => 'uuid9',
+          uuid: fakeUuid(),
+        })
+      )(WrappedExampleComponent);
+      const { getByText } = render(<InsertionIdTrackedExampleComponent text="component works" />);
+      expect(getByText('component works')).toBeInTheDocument();
+      expect(logImpression.mock.calls).toEqual([]);
+      mockAllIsIntersecting(true);
+      expect(logImpression.mock.calls).toEqual([]);
+      runAllTimers();
+      expect(logImpression.mock.calls.length).toEqual(1);
+      expect(logImpression.mock.calls[0].length).toEqual(2);
+      expect(logImpression.mock.calls[0][0]).toEqual({
+        impressionId: 'uuid0',
+        insertionId: 'uuid9',
+      });
+      // This is the props.
+      expect(logImpression.mock.calls[0][1].text).toEqual('component works');
     });
   });
 });
