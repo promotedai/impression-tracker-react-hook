@@ -1,3 +1,10 @@
+# [7.6.0](https://github.com/promotedai/impression-tracker-react-hook/compare/v7.5.0...v7.6.0) (2022-06-09)
+
+
+### Features
+
+* support composableImpressionTracker ([#57](https://github.com/promotedai/impression-tracker-react-hook/issues/57)) ([512564e](https://github.com/promotedai/impression-tracker-react-hook/commit/512564e8157ae15aef4daf6cb14c86b02d371187))
+
 # [7.5.0](https://github.com/promotedai/impression-tracker-react-hook/compare/v7.4.0...v7.5.0) (2022-06-06)
 
 
