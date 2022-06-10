@@ -31,7 +31,7 @@ const HookedExampleComponent = ({
     insertionId,
     contentId,
     handleError,
-    logImpression: eventLogger.logImpression,
+    logImpression: eventLogger.logImpression.bind(eventLogger),
   });
   return <div ref={ref}>{text}</div>;
 };
@@ -64,7 +64,7 @@ const WrappedExampleComponent = withImpressionTracker(ExampleComponent, {
   getContentId: props => props.contentId,
   getInsertionId: props => props.insertionId,
   // Can be changed to modify the impression.
-  logImpression: eventLogger.logImpression,
+  logImpression: eventLogger.logImpression.bind(eventLogger),
 });
 ```
 
@@ -79,7 +79,7 @@ const WrappedExampleComponent = compose(
     getContentId: props => props.contentId,
     getInsertionId: props => props.insertionId,
     // Can be changed to modify the impression.
-    logImpression: eventLogger.logImpression,
+    logImpression: eventLogger.logImpression.bind(eventLogger),
   })
 )(ExampleComponent);
 ```
