@@ -54,6 +54,8 @@ interface TrackerArguments {
   uuid?: () => string;
   /* To override the visibility threshold. Defaults to 1s. */
   visibilityTimeThreshold?: number;
+  /* Used to set the default source type.  Defaults to 'DELIVERY' = 1. */
+  defaultSourceType?: ImpressionSourceTypeMap[keyof ImpressionSourceTypeMap] | ImpressionSourceTypeString;
 }
 
 type TrackerResponse = [(node?: Element | null) => void, string, () => void];
@@ -78,14 +80,16 @@ type TrackerResponse = [(node?: Element | null) => void, string, () => void];
  */
 export const useImpressionTracker = (args: TrackerArguments): TrackerResponse => {
   const {
-    enable = true,
-    insertionId: propInsertionId = '',
     contentId: propContentId = '',
-    logImpression,
+    // 'DELIVERY'.
+    defaultSourceType = 1,
+    enable = true,
     handleError,
+    insertionId: propInsertionId = '',
     intersectionOptions = {
       threshold: DEFAULT_VISIBILITY_RATIO_THRESHOLD,
     },
+    logImpression,
     uuid = uuidv4,
     visibilityTimeThreshold = DEFAULT_VISIBILITY_TIME_THRESHOLD,
   } = args;
@@ -142,6 +146,7 @@ export const useImpressionTracker = (args: TrackerArguments): TrackerResponse =>
     }
     const impression: Impression = {
       impressionId: currentImpressionId,
+      sourceType: defaultSourceType,
     };
     if (insertionIdRef.current) {
       impression.insertionId = insertionIdRef.current;
@@ -177,6 +182,10 @@ export const useImpressionTracker = (args: TrackerArguments): TrackerResponse =>
 export interface HocTrackerArguments<P extends WithImpressionTrackerProps> {
   /* A quick way to disable the hook. Defaults to true. */
   isEnabled?: (props: Subtract<P, WithImpressionTrackerProps>) => boolean;
+  /* Used to set the default source type.  Defaults to 'DELIVERY' = 1. */
+  getDefaultSourceType?: (
+    props: Subtract<P, WithImpressionTrackerProps>
+  ) => ImpressionSourceTypeMap[keyof ImpressionSourceTypeMap] | ImpressionSourceTypeString;
   /* Get the insertion ID from the props. Defaults to empty string. */
   getInsertionId?: (props: Subtract<P, WithImpressionTrackerProps>) => string;
   /* Get the content ID from the props. defaults to empty string. */
@@ -216,6 +225,7 @@ export const withImpressionTracker = <P extends WithImpressionTrackerProps>(
   const fn = (props: Subtract<P, WithImpressionTrackerProps>) => {
     const {
       isEnabled,
+      getDefaultSourceType,
       getInsertionId,
       getContentId,
       logImpression: logImpressionWithProps,
@@ -227,6 +237,7 @@ export const withImpressionTracker = <P extends WithImpressionTrackerProps>(
     const enable = (isEnabled !== undefined ? isEnabled(props) : true) ?? true;
     const hookArgs: TrackerArguments = {
       enable,
+      defaultSourceType: enable && getDefaultSourceType ? getDefaultSourceType(props) : 1,
       insertionId: enable && getInsertionId ? getInsertionId(props) : '',
       contentId: enable && getContentId ? getContentId(props) : '',
       logImpression: (impression) => logImpressionWithProps(impression, props),

@@ -85,6 +85,7 @@ describe('useImpressionTracker', () => {
         {
           impressionId: 'uuid0',
           insertionId: 'uuid9',
+          sourceType: 1,
         },
       ],
     ]);
@@ -105,6 +106,7 @@ describe('useImpressionTracker', () => {
         {
           contentId: 'abc',
           impressionId: 'uuid0',
+          sourceType: 1,
         },
       ],
     ]);
@@ -131,6 +133,7 @@ describe('useImpressionTracker', () => {
           contentId: 'abc',
           impressionId: 'uuid0',
           insertionId: 'uuid9',
+          sourceType: 1,
         },
       ],
     ]);
@@ -174,6 +177,7 @@ describe('useImpressionTracker', () => {
       contentId: 'abc',
       impressionId: 'uuid0',
       insertionId: 'uuid9',
+      sourceType: 1,
     };
     expect(logImpression.mock.calls).toEqual([[impression1]]);
     mockAllIsIntersecting(false);
@@ -201,6 +205,7 @@ describe('useImpressionTracker', () => {
       contentId: 'abc',
       impressionId: 'uuid0',
       insertionId: 'uuid9',
+      sourceType: 1,
     };
     act(() => latestLogImpressionFunctor());
     expect(logImpression.mock.calls).toEqual([[impression1]]);
@@ -230,6 +235,7 @@ describe('useImpressionTracker', () => {
       contentId: 'abc',
       impressionId: 'uuid0',
       insertionId: 'uuid9',
+      sourceType: 1,
     };
     expect(getByText('component works')).toBeInTheDocument();
     expect(logImpression.mock.calls).toEqual([[impression1]]);
@@ -331,6 +337,7 @@ describe('useImpressionTracker', () => {
       expect(logImpression.mock.calls[0][0]).toEqual({
         impressionId: 'uuid0',
         insertionId: 'uuid9',
+        sourceType: 1,
       });
       // This is the props.
       expect(logImpression.mock.calls[0][1].text).toEqual('component works');
@@ -357,6 +364,7 @@ describe('useImpressionTracker', () => {
       expect(logImpression.mock.calls[0][0]).toEqual({
         impressionId: 'uuid0',
         contentId: 'abc',
+        sourceType: 1,
       });
       // This is the props.
       expect(logImpression.mock.calls[0][1].text).toEqual('component works');
@@ -419,6 +427,34 @@ describe('useImpressionTracker', () => {
       runAllTimers();
       expect(logImpression.mock.calls).toEqual([]);
     });
+
+    it('set defaultSourceType', () => {
+      const logImpression = jest.fn();
+      const InsertionIdTrackedExampleComponent = withImpressionTracker(WrappedExampleComponent, {
+        getDefaultSourceType: () => 2,
+        getInsertionId: () => 'uuid9',
+        handleError: (err: Error) => {
+          throw err;
+        },
+        logImpression,
+        uuid: fakeUuid(),
+      });
+      const { getByText } = render(<InsertionIdTrackedExampleComponent text="component works" />);
+      expect(getByText('component works')).toBeInTheDocument();
+      expect(logImpression.mock.calls).toEqual([]);
+      mockAllIsIntersecting(true);
+      expect(logImpression.mock.calls).toEqual([]);
+      runAllTimers();
+      expect(logImpression.mock.calls.length).toEqual(1);
+      expect(logImpression.mock.calls[0].length).toEqual(2);
+      expect(logImpression.mock.calls[0][0]).toEqual({
+        impressionId: 'uuid0',
+        insertionId: 'uuid9',
+        sourceType: 2,
+      });
+      // This is the props.
+      expect(logImpression.mock.calls[0][1].text).toEqual('component works');
+    });
   });
 
   describe('composeableImpressionTracker', () => {
@@ -448,6 +484,7 @@ describe('useImpressionTracker', () => {
       expect(logImpression.mock.calls[0][0]).toEqual({
         impressionId: 'uuid0',
         insertionId: 'uuid9',
+        sourceType: 1,
       });
       // This is the props.
       expect(logImpression.mock.calls[0][1].text).toEqual('component works');
