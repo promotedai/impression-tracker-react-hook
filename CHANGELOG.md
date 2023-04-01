@@ -1,3 +1,10 @@
+# [7.7.0](https://github.com/promotedai/impression-tracker-react-hook/compare/v7.6.0...v7.7.0) (2023-04-01)
+
+
+### Features
+
+* support a default ImpressionSourceType; set to DELIVERY ([#61](https://github.com/promotedai/impression-tracker-react-hook/issues/61)) ([08e8e21](https://github.com/promotedai/impression-tracker-react-hook/commit/08e8e214a37700062e55521017d9a6c5d22fc2ae))
+
 # [7.6.0](https://github.com/promotedai/impression-tracker-react-hook/compare/v7.5.0...v7.6.0) (2022-06-09)
 
 
