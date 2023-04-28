@@ -1,3 +1,10 @@
+# [7.8.0](https://github.com/promotedai/impression-tracker-react-hook/compare/v7.7.0...v7.8.0) (2023-04-28)
+
+
+### Features
+
+* bump dependency versions ([#62](https://github.com/promotedai/impression-tracker-react-hook/issues/62)) ([ce60023](https://github.com/promotedai/impression-tracker-react-hook/commit/ce60023a4251cb831839f363ad4c686884b84b9f))
+
 # [7.7.0](https://github.com/promotedai/impression-tracker-react-hook/compare/v7.6.0...v7.7.0) (2023-04-01)
 
 
