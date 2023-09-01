@@ -24,7 +24,7 @@ export type ImpressionSourceTypeString = 'UNKNOWN_IMPRESSION_SOURCE_TYPE' | 'DEL
 
 export interface Impression {
   userInfo?: {
-    logUserId?: string;
+    anonUserId?: string;
     userId?: string;
     isInternalUser?: boolean;
   };
