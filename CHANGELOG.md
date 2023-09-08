@@ -1,3 +1,17 @@
+# [8.0.0](https://github.com/promotedai/impression-tracker-react-hook/compare/v7.8.0...v8.0.0) (2023-09-08)
+
+
+### Features
+
+* switch logUserId to anonUserId ([#63](https://github.com/promotedai/impression-tracker-react-hook/issues/63)) ([48a3f0e](https://github.com/promotedai/impression-tracker-react-hook/commit/48a3f0ed72e768949fd9ed138b353b96a2132847))
+
+
+### BREAKING CHANGES
+
+* renames logUserId to anonUserId.
+
+TESTING: ran unit tests
+
 # [7.8.0](https://github.com/promotedai/impression-tracker-react-hook/compare/v7.7.0...v7.8.0) (2023-04-28)
 
 
