@@ -106,6 +106,7 @@ export const useImpressionTracker = (args: TrackerArguments): TrackerResponse =>
   }
 
   const [logged, setLogged] = useState(false);
+  const [visibilityTimer, setVisibilityTimer] = useState<ReturnType<typeof setTimeout> | null>(null);
   const [, setInsertionId, insertionIdRef] = useStateRef('');
   const [, setContentId, contentIdRef] = useStateRef('');
   const [, setImpressionId, impressionIdRef] = useStateRef('');
@@ -166,7 +167,13 @@ export const useImpressionTracker = (args: TrackerArguments): TrackerResponse =>
     () => {
       if (active && !logged && inView) {
         const timer = setTimeout(logImpressionFunctor, visibilityTimeThreshold);
+        setVisibilityTimer(timer);
         return () => clearTimeout(timer);
+      } else if (!logged && visibilityTimer && !inView) {
+        // Clear the timeout for items which were in the viewport for less than visibilityTimeThreshold.
+        // This might happen during a flast fling or scroll for example.
+        clearTimeout(visibilityTimer);
+        return;
       } else {
         return;
       }
