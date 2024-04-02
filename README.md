@@ -14,7 +14,6 @@ export const handleError = process.env.NODE_ENV !== 'production' ? (err) => { th
 
 export const eventLogger = createEventLogger({
   enabled: true,
-  platformName: 'mymarket',
   handleError,
 });
 
