@@ -3,9 +3,10 @@ import copy from 'rollup-plugin-copy';
 import del from 'rollup-plugin-delete';
 import external from 'rollup-plugin-peer-deps-external';
 import generatePackageJson from 'rollup-plugin-generate-package-json';
-import { terser } from 'rollup-plugin-terser';
+import terser from '@rollup/plugin-terser';
 import typescript from 'rollup-plugin-typescript2';
-import pkg from './package.json';
+import ts from 'typescript';
+import pkg from './package.json' assert { type: 'json' };
 
 const peerDependencies = pkg.peerDependencies;
 
@@ -16,7 +17,7 @@ export default [
       external(),
       del({ targets: 'dist/*' }),
       typescript({
-        typescript: require('typescript'),
+        typescript: ts,
       }),
       nodeResolve(),
       copy({

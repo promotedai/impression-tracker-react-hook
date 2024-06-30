@@ -20,7 +20,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           always-auth: true
-          node-version: 18
+          node-version: 20
           registry-url: "https://npm.pkg.github.com/promotedai"
           scope: "@promotedai"
 
@@ -32,7 +32,7 @@ jobs:
 
       - name: Semantic Release
         # Dan Hill reviewed this version.
-        uses: cycjimmy/semantic-release-action@v3.2.0
+        uses: cycjimmy/semantic-release-action@v4.1.0
         id: semantic
         with:
           branch: main
