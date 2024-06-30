@@ -173,7 +173,7 @@ export const useImpressionTracker = (args: TrackerArguments): TrackerResponse =>
     },
     // TODO - should ref.current be in this?
     // The Typescript interface for the useInView hook is limited.
-    [(ref as any).current, inView]
+    [(ref as any).current, inView],
   );
 
   return [ref, impressionIdRef.current, logImpressionFunctor];
@@ -184,7 +184,7 @@ export interface HocTrackerArguments<P extends WithImpressionTrackerProps> {
   isEnabled?: (props: Subtract<P, WithImpressionTrackerProps>) => boolean;
   /* Used to set the default source type.  Defaults to 'DELIVERY' = 1. */
   getDefaultSourceType?: (
-    props: Subtract<P, WithImpressionTrackerProps>
+    props: Subtract<P, WithImpressionTrackerProps>,
   ) => ImpressionSourceTypeMap[keyof ImpressionSourceTypeMap] | ImpressionSourceTypeString;
   /* Get the insertion ID from the props. Defaults to empty string. */
   getInsertionId?: (props: Subtract<P, WithImpressionTrackerProps>) => string;
@@ -220,7 +220,7 @@ export interface WithImpressionTrackerProps {
  */
 export const withImpressionTracker = <P extends WithImpressionTrackerProps>(
   Component: React.ComponentType<P>,
-  args: HocTrackerArguments<P>
+  args: HocTrackerArguments<P>,
 ): React.FC<Subtract<P, WithImpressionTrackerProps>> => {
   const fn = (props: Subtract<P, WithImpressionTrackerProps>) => {
     const {
@@ -267,7 +267,7 @@ export const withImpressionTracker = <P extends WithImpressionTrackerProps>(
  * @returns a `Function<Component, Component>` that works with `compose`
  */
 export const composableImpressionTracker = <P extends WithImpressionTrackerProps>(
-  args: HocTrackerArguments<P>
+  args: HocTrackerArguments<P>,
 ): ((Component: React.ComponentType<P>) => React.FC<Subtract<P, WithImpressionTrackerProps>>) => {
   return (Component: React.ComponentType<P>) => withImpressionTracker(Component, args);
 };

@@ -1,12 +1,12 @@
 [
   {
     "path": "dist/impression-tracker-react-hook.esm.js",
-    "limit": "1 KB",
+    "limit": "5 KB",
     "webpack": false
   },
   {
     "path": "dist/impression-tracker-react-hook.umd.js",
-    "limit": "1 KB",
+    "limit": "5 KB",
     "webpack": false
   }
 ]

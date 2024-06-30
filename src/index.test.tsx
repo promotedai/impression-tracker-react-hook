@@ -77,7 +77,7 @@ describe('useImpressionTracker', () => {
   it('set insertionId', () => {
     const logImpression = jest.fn();
     const { getByText } = render(
-      <HookedExampleComponent text="component works" insertionId="uuid9" logImpression={logImpression} />
+      <HookedExampleComponent text="component works" insertionId="uuid9" logImpression={logImpression} />,
     );
     expect(logImpression.mock.calls).toEqual([]);
     mockAllIsIntersecting(true);
@@ -98,7 +98,7 @@ describe('useImpressionTracker', () => {
   it('set contentId', () => {
     const logImpression = jest.fn();
     const { getByText } = render(
-      <HookedExampleComponent text="component works" contentId="abc" logImpression={logImpression} />
+      <HookedExampleComponent text="component works" contentId="abc" logImpression={logImpression} />,
     );
     expect(logImpression.mock.calls).toEqual([]);
     mockAllIsIntersecting(true);
@@ -124,7 +124,7 @@ describe('useImpressionTracker', () => {
         contentId="abc"
         insertionId="uuid9"
         logImpression={logImpression}
-      />
+      />,
     );
     expect(logImpression.mock.calls).toEqual([]);
     mockAllIsIntersecting(true);
@@ -152,7 +152,7 @@ describe('useImpressionTracker', () => {
         contentId="abc"
         insertionId="uuid9"
         logImpression={logImpression}
-      />
+      />,
     );
     expect(logImpression.mock.calls).toEqual([]);
     mockAllIsIntersecting(true);
@@ -170,7 +170,7 @@ describe('useImpressionTracker', () => {
         contentId="abc"
         insertionId="uuid9"
         logImpression={logImpression}
-      />
+      />,
     );
     expect(logImpression.mock.calls).toEqual([]);
     mockAllIsIntersecting(true);
@@ -202,7 +202,7 @@ describe('useImpressionTracker', () => {
         contentId="abc"
         insertionId="uuid9"
         logImpression={logImpression}
-      />
+      />,
     );
     expect(logImpression.mock.calls).toEqual([]);
     const impression1 = {
@@ -228,7 +228,7 @@ describe('useImpressionTracker', () => {
         contentId="abc"
         insertionId="uuid9"
         logImpression={logImpression}
-      />
+      />,
     );
     expect(logImpression.mock.calls).toEqual([]);
     expect(logImpression.mock.calls).toEqual([]);
@@ -255,7 +255,7 @@ describe('useImpressionTracker', () => {
         contentId="abc"
         insertionId="uuid9"
         logImpression={logImpression}
-      />
+      />,
     );
 
     expect(() => {
@@ -265,7 +265,7 @@ describe('useImpressionTracker', () => {
           contentId="diff"
           insertionId="uuid9"
           logImpression={logImpression}
-        />
+        />,
       );
     }).toThrow();
   });
@@ -278,11 +278,16 @@ describe('useImpressionTracker', () => {
         contentId="abc"
         insertionId="uuid9"
         logImpression={logImpression}
-      />
+      />,
     );
 
     rerender(
-      <HookedExampleComponent text="component works" contentId="abc" insertionId="diff" logImpression={logImpression} />
+      <HookedExampleComponent
+        text="component works"
+        contentId="abc"
+        insertionId="diff"
+        logImpression={logImpression}
+      />,
     );
   });
 
@@ -294,7 +299,7 @@ describe('useImpressionTracker', () => {
   it('no IDs - do nothing', () => {
     const logImpression = jest.fn();
     const { getByText } = render(
-      <HookedExampleComponent text="component works" logImpression={logImpression} handleError={() => undefined} />
+      <HookedExampleComponent text="component works" logImpression={logImpression} handleError={() => undefined} />,
     );
     expect(logImpression.mock.calls).toEqual([]);
     mockAllIsIntersecting(true);
@@ -475,7 +480,7 @@ describe('useImpressionTracker', () => {
           },
           getInsertionId: () => 'uuid9',
           uuid: fakeUuid(),
-        })
+        }),
       )(WrappedExampleComponent);
       const { getByText } = render(<InsertionIdTrackedExampleComponent text="component works" />);
       expect(getByText('component works')).toBeInTheDocument();
