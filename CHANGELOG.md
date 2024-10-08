@@ -1,3 +1,10 @@
+## [8.3.2](https://github.com/promotedai/impression-tracker-react-hook/compare/v8.3.1...v8.3.2) (2024-10-08)
+
+
+### Bug Fixes
+
+* more deps ([#160](https://github.com/promotedai/impression-tracker-react-hook/issues/160)) ([abffe62](https://github.com/promotedai/impression-tracker-react-hook/commit/abffe6203fad8285fd70ad72360d7105e65ca4f7))
+
 ## [8.3.1](https://github.com/promotedai/impression-tracker-react-hook/compare/v8.3.0...v8.3.1) (2024-10-07)
 
 
